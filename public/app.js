@@ -66,6 +66,24 @@ let paused = false;
 $('hero').onmouseenter = () => { paused = true; };
 $('hero').onmouseleave = () => { paused = false; };
 
+// Touch: swipe the hero left/right to change slide (vertical scrolling is left alone).
+let touch = null;
+$('hero').addEventListener('touchstart', e => {
+  const t = e.touches[0];
+  touch = e.touches.length === 1 ? { x: t.clientX, y: t.clientY } : null;
+  paused = true;
+}, { passive: true });
+$('hero').addEventListener('touchend', e => {
+  paused = false;
+  if (!touch) return;
+  const t = e.changedTouches[0], dx = t.clientX - touch.x, dy = t.clientY - touch.y;
+  touch = null;
+  if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+  showSlide(slide + (dx < 0 ? 1 : -1));
+  restartTimer();
+}, { passive: true });
+$('hero').addEventListener('touchcancel', () => { touch = null; paused = false; }, { passive: true });
+
 function render() {
   const shown = titles.filter(t => filter === 'all' || t.type === filter);
 
