@@ -1,5 +1,6 @@
 const $ = id => document.getElementById(id);
 let titles = [], filter = 'all', slide = 0, timer = null;
+let cat = new URLSearchParams(location.search).get('category') || '';
 const SLIDE_MS = 6000;
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ESC[c]);
@@ -99,14 +100,46 @@ function render() {
     return;
   }
   const cats = [...new Set(shown.map(t => t.category))];
+  renderCats(cats);
+  if (cat) {
+    const list = shown.filter(t => t.category === cat);
+    $('rows').innerHTML = list.length
+      ? `<div class="row-head cat-head"><h2>${esc(cat)}</h2><span>${list.length} title${list.length > 1 ? 's' : ''}<a class="cat-clear" data-cat="" href="/">&times; Clear</a></span></div><div class="cgrid">${list.map(t => tile(t)).join('')}</div>`
+      : `<div class="empty">No titles in “${esc(cat)}” yet. <a href="/" data-cat="" style="color:var(--red)">Browse all</a></div>`;
+    return;
+  }
   const top = shown.length >= 4
     ? `<div class="row top"><div class="row-head"><h2>Top 10</h2></div>${rail(shown.slice(0, 10).map((t, i) => tile(t, i + 1)).join(''))}</div>` : '';
   $('rows').innerHTML = top + cats.map(c => {
     const list = shown.filter(t => t.category === c);
-    return `<div class="row"><div class="row-head"><h2>${esc(c)}</h2><span>${list.length} title${list.length > 1 ? 's' : ''}</span></div>${rail(list.map(t => tile(t)).join(''))}</div>`;
+    return `<div class="row"><div class="row-head"><h2><a data-cat="${esc(c)}" href="/?category=${encodeURIComponent(c)}">${esc(c)}</a></h2><span><a data-cat="${esc(c)}" href="/?category=${encodeURIComponent(c)}">See all ${list.length}</a></span></div>${rail(list.map(t => tile(t)).join(''))}</div>`;
   }).join('');
   wireRails();
 }
+
+// ---------- category bar ----------
+function renderCats(cats) {
+  document.body.classList.toggle('browsing', !!cat);
+  document.title = cat ? `${cat} - YOUFLIX` : 'YOUFLIX';
+  const chip = (name, label, n) => `<a class="chip ${name === cat ? 'active' : ''}" data-cat="${esc(name)}" href="${name ? '/?category=' + encodeURIComponent(name) : '/'}"${name === cat ? ' aria-current="true"' : ''}>${esc(label)}${n != null ? ` <small>${n}</small>` : ''}</a>`;
+  $('cats').innerHTML = chip('', 'All') + cats.map(c => chip(c, c, titles.filter(t => t.category === c).length)).join('');
+  const on = $('cats').querySelector('.active');
+  if (on) $('cats').scrollTo({ left: on.offsetLeft - 24, behavior: 'smooth' });
+}
+
+function setCat(c, push = true) {
+  cat = c;
+  if (push) history.pushState({}, '', c ? '/?category=' + encodeURIComponent(c) : '/');
+  render();
+  scrollTo(0, 0);
+}
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-cat]');
+  if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+  e.preventDefault();
+  setCat(a.dataset.cat);
+});
+addEventListener('popstate', () => { cat = new URLSearchParams(location.search).get('category') || ''; render(); });
 
 function wireRails() {
   document.querySelectorAll('.rail-wrap').forEach(w => {

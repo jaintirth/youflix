@@ -14,7 +14,7 @@
       <button class="sx-btn" type="button" aria-label="Search" aria-expanded="false">${icon}</button>
       <form class="sx-form" role="search" action="/" method="get">
         ${icon}
-        <input class="sx-input" name="q" type="search" placeholder="Titles, genres, channels" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" aria-label="Search titles">
+        <input class="sx-input" name="q" type="search" placeholder="Search titles, categories, channels" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" aria-label="Search titles">
         <button class="sx-clear" type="button" aria-label="Clear search" hidden>&times;</button>
         <button class="sx-cancel" type="button">Cancel</button>
       </form>
@@ -35,9 +35,12 @@
 
   // ---------- matching ----------
   const norm = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-  let index = null, loading = null;
+  let index = null, cats = [], loading = null;
   const load = () => loading ||= fetch('/api/titles').then(r => r.json()).then(list => {
     index = list.map((t, i) => ({ t, i, title: norm(t.title), other: [norm(t.category), norm(t.channel), norm(t.year), t.type === 'series' ? 'series' : 'movie'] }));
+    const n = {};
+    list.forEach(t => { if (t.category) n[t.category] = (n[t.category] || 0) + 1; });
+    cats = Object.entries(n).map(([name, count]) => ({ name, count, key: norm(name) }));
   }).catch(() => { index = []; });
 
   const wordStart = (s, tok) => s.startsWith(tok) || s.includes(' ' + tok);
@@ -63,6 +66,13 @@
     return out.sort((a, b) => b.score - a.score || a.e.i - b.e.i).map(x => x.e.t);
   }
 
+  // categories whose name matches the query; every category when the query is empty
+  const findCats = q => {
+    const toks = norm(q).split(' ').filter(Boolean);
+    return toks.length ? cats.filter(c => toks.every(tok => wordStart(c.key, tok))) : [];
+  };
+  const catChip = c => `<a class="sx-cat" data-cat="${h(c.name)}" href="/?category=${encodeURIComponent(c.name)}">${h(c.name)} <small>${c.count}</small></a>`;
+
   // ---------- dropdown / overlay ----------
   const meta = t => [t.type === 'series' ? 'Series' : '', t.year, t.category].filter(Boolean).map(h).join(' · ');
   const href = t => `/movie/${encodeURIComponent(t.id)}`;
@@ -76,14 +86,20 @@
     const q = input.value.trim();
     clear.hidden = !q;
     active = -1;
-    if (!q) { drop.hidden = !(phone.matches && overlayOpen); drop.innerHTML = phone.matches ? '<div class="sx-hint">Search by title, genre or channel</div>' : ''; return; }
+    if (!q) {
+      drop.hidden = !(phone.matches && overlayOpen);
+      drop.innerHTML = phone.matches ? '<div class="sx-hint">Search by title, category or channel<br>Try “Action” or “Comedy”</div>' : '';
+      return;
+    }
     const found = search(q);
+    const cm = findCats(q);
+    const catBlock = cm.length ? `<div class="sx-label">Categories</div><div class="sx-cats">${cm.map(catChip).join('')}</div>` : '';
     const cap = phone.matches ? 30 : 6;
     drop.hidden = false;
     drop.setAttribute('role', 'listbox');
-    drop.innerHTML = found.length
-      ? found.slice(0, cap).map(row).join('') + (found.length > cap || !phone.matches ? `<button class="sx-all" type="button">See all ${found.length} result${found.length > 1 ? 's' : ''}</button>` : '')
-      : `<div class="sx-hint">No results for “${h(q)}”</div>`;
+    drop.innerHTML = catBlock + (found.length
+      ? (cm.length ? '<div class="sx-label">Titles</div>' : '') + found.slice(0, cap).map(row).join('') + (found.length > cap || !phone.matches ? `<button class="sx-all" type="button">See all ${found.length} result${found.length > 1 ? 's' : ''}</button>` : '')
+      : (cm.length ? '' : `<div class="sx-hint">No results for “${h(q)}”</div>`));
   }
 
   function openBox() {
@@ -125,7 +141,7 @@
     input.value = q;
     clear.hidden = !q;
     document.body.classList.toggle('searching', !!q);
-    document.title = q ? `${q} - YOUFLIX` : 'YOUFLIX';
+    if (q) document.title = `${q} - YOUFLIX`;
     if (!q) { results.hidden = true; box.classList.remove('open'); return; }
     box.classList.add('open');
     results.hidden = false;
@@ -148,7 +164,14 @@
   clear.onclick = () => { input.value = ''; paintDrop(); input.focus(); if (onHome && document.body.classList.contains('searching')) showResults('', true); };
   box.querySelector('.sx-cancel').onclick = () => { if (!document.body.classList.contains('searching')) input.value = ''; closeBox(); };
   form.onsubmit = e => { e.preventDefault(); if (input.value.trim()) { input.blur(); showResults(input.value, true); } };
-  drop.addEventListener('click', e => { if (e.target.closest('.sx-all')) form.requestSubmit(); });
+  drop.addEventListener('click', e => {
+    if (e.target.closest('.sx-all')) form.requestSubmit();
+    // category picked: close the overlay without leaving a stale history entry, then app.js shows the category
+    if (e.target.closest('.sx-cat') && onHome) {
+      if (overlayOpen && history.state?.sx) history.replaceState({}, '', location.href);
+      showResults('', false);
+    }
+  });
 
   input.addEventListener('keydown', e => {
     const rows = [...drop.querySelectorAll('.sx-row')];
