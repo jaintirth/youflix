@@ -165,10 +165,16 @@ function fromTmdb(x, type) {
 app.get('/api/admin/tmdb/search', requireAdmin, async (req, res) => {
   const type = req.query.type === 'series' ? 'series' : 'movie';
   const q = String(req.query.q || '').trim();
-  if (!q) return res.json([]);
+  if (!q) return res.json({ results: [], page: 1, totalPages: 0, totalResults: 0 });
   try {
-    const data = await tmdb(type === 'series' ? '/search/tv' : '/search/movie', { query: q, include_adult: 'false' });
-    res.json(data.results.slice(0, 20).map(x => fromTmdb(x, type)));
+    const page = Math.max(1, Math.min(500, parseInt(req.query.page, 10) || 1)); // TMDB caps at 500
+    const data = await tmdb(type === 'series' ? '/search/tv' : '/search/movie', { query: q, include_adult: 'false', page });
+    res.json({
+      results: data.results.map(x => fromTmdb(x, type)),
+      page: data.page,
+      totalPages: Math.min(data.total_pages, 500),
+      totalResults: data.total_results
+    });
   } catch (e) { res.status(e.status || 500).json({ error: e.message }); }
 });
 

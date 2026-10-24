@@ -32,12 +32,21 @@ const api = async (url, opts) => {
 const ytSearch = c => 'https://www.youtube.com/results?search_query=' +
   encodeURIComponent(`${c.title} ${c.year || ''} ${c.type === 'series' ? 'full episodes' : 'full movie'}`) + '&sp=EgIQAQ%253D%253D';
 let results = [];
+let tpage = 1, tTotal = 0;
+let tquery = { q: '', type: 'movie' }; // the search being paged, so editing the box doesn't change it mid-browse
 
-async function tmdbSearch() {
+async function tmdbSearch(page = 1) {
   const msg = $('t-msg');
+  if (page === 1) tquery = { q: $('tq').value, type: $('ttype').value };
   msg.className = 'msg'; msg.textContent = 'Searching...';
   try {
-    results = await api(`/api/admin/tmdb/search?q=${encodeURIComponent($('tq').value)}&type=${$('ttype').value}`);
+    const data = await api(`/api/admin/tmdb/search?q=${encodeURIComponent(tquery.q)}&type=${tquery.type}&page=${page}`);
+    results = data.results;
+    tpage = data.page; tTotal = data.totalPages;
+    $('tpager').hidden = tTotal <= 1;
+    $('tpage').textContent = `Page ${tpage} of ${tTotal} (${data.totalResults} results)`;
+    $('tprev').disabled = tpage <= 1;
+    $('tnext').disabled = tpage >= tTotal;
     msg.textContent = results.length ? '' : 'No results.';
     $('tresults').innerHTML = results.map((c, i) => `<div class="card">
       <img src="${esc(c.poster || '')}" alt="">
@@ -50,8 +59,10 @@ async function tmdbSearch() {
     });
   } catch (e) { msg.className = 'msg err'; msg.textContent = e.message; }
 }
-$('tsearch').onclick = tmdbSearch;
-$('tq').onkeydown = e => { if (e.key === 'Enter') tmdbSearch(); };
+$('tsearch').onclick = () => tmdbSearch(1);
+$('tq').onkeydown = e => { if (e.key === 'Enter') tmdbSearch(1); };
+$('tprev').onclick = () => { tmdbSearch(tpage - 1); $('tresults').scrollIntoView({ behavior: 'smooth' }); };
+$('tnext').onclick = () => { tmdbSearch(tpage + 1); $('tresults').scrollIntoView({ behavior: 'smooth' }); };
 
 async function loadQueue() {
   const cands = await api('/api/admin/candidates');
