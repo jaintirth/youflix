@@ -62,7 +62,12 @@ function requireAdmin(req, res, next) {
 // ---------- app ----------
 const app = express();
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+const PUB = path.join(__dirname, 'public');
+// Clean URLs: /movie/<id> and /admin instead of the .html files.
+app.get(['/movie.html', '/admin.html'], (req, res) => res.redirect(301, req.path.replace('.html', '')));
+app.get('/movie/:id', (req, res) => res.sendFile(path.join(PUB, 'movie.html')));
+app.get('/admin', (req, res) => res.sendFile(path.join(PUB, 'admin.html')));
+app.use(express.static(PUB));
 
 app.post('/api/admin/login', (req, res) => {
   const given = Buffer.from(String(req.body.password || ''));
@@ -82,7 +87,35 @@ app.post('/api/admin/logout', (req, res) => {
 app.get('/api/admin/me', (req, res) => res.json({ admin: sessions.has(cookie(req, 'yf_admin')) }));
 
 // public catalogue
-app.get('/api/titles', (req, res) => res.json(loadTitles()));
+// Most popular first (TMDB's daily popularity score): the banner (first 6) and the Top 10 row both follow this order.
+// Titles without a score yet sort last, newest first.
+const byPopularity = (a, b) => (b.popularity ?? -1) - (a.popularity ?? -1) || String(b.addedAt).localeCompare(String(a.addedAt));
+app.get('/api/titles', (req, res) => res.json(loadTitles().sort(byPopularity)));
+
+// TMDB's popularity score for a title (finding it on TMDB first when we only have the name). Null when unknown.
+async function tmdbPopularity({ tmdbId, title, year }) {
+  if (!TMDB_KEY && !TMDB_TOKEN) return null;
+  try {
+    let id = tmdbId;
+    if (!id) {
+      const s = await tmdb('/search/movie', { query: title, ...(year ? { year } : {}) });
+      id = s.results && s.results[0] && s.results[0].id;
+    }
+    if (!id) return null;
+    const d = await tmdb(`/movie/${id}`);
+    return { tmdbId: id, popularity: Math.round(d.popularity * 100) / 100 };
+  } catch { return null; }
+}
+async function refreshPopularity() {
+  const titles = loadTitles();
+  let changed = 0;
+  for (const t of titles) {
+    const p = await tmdbPopularity(t);
+    if (p && (t.popularity !== p.popularity || !t.tmdbId)) { t.popularity = p.popularity; t.tmdbId = t.tmdbId || p.tmdbId; changed++; }
+  }
+  if (changed) { saveTitles(titles); console.log(`Updated TMDB popularity for ${changed} title(s)`); }
+}
+
 
 // Publishes a title. `base` carries optional TMDB metadata that takes precedence over YouTube's.
 async function publish(base, url) {
@@ -102,10 +135,10 @@ async function publish(base, url) {
     : (meta && meta.thumbnail_url) || null;
   const item = {
     id: crypto.randomUUID(),
-    type: base.type === 'series' ? 'series' : 'movie',
+    type: 'movie', // series are not supported yet
     title: (base.title || meta.title).trim(),
     description: (base.description || '').trim(),
-    category: (base.category || 'General').trim(),
+    category: ((base.category || await inferCategory({ type: base.type, tmdbId: base.tmdbId, title: (base.title || (meta && meta.title) || '').trim(), year: base.year })) || 'General').trim(),
     year: base.year ? Number(base.year) || null : null,
     kind: yt.kind,
     youtubeId: yt.id,
@@ -116,6 +149,8 @@ async function publish(base, url) {
     channel: (meta && meta.author_name) || null,
     addedAt: new Date().toISOString()
   };
+  const pop = await tmdbPopularity(item);
+  if (pop) { item.popularity = pop.popularity; item.tmdbId = item.tmdbId || pop.tmdbId; }
   titles.unshift(item);
   saveTitles(titles);
   return { status: 201, item };
@@ -149,6 +184,31 @@ async function tmdb(pathname, params = {}) {
   return r.json();
 }
 
+// Category = the title's main TMDB genre, so the admin never picks one by hand.
+const genreCache = {};
+async function genreNames(kind) {
+  if (!genreCache[kind]) {
+    const d = await tmdb(`/genre/${kind}/list`);
+    genreCache[kind] = Object.fromEntries(d.genres.map(g => [g.id, g.name]));
+  }
+  return genreCache[kind];
+}
+// Works from a TMDB id when known, otherwise finds the title on TMDB first. Returns null when TMDB can't say.
+async function inferCategory({ type, tmdbId, title, year }) {
+  if (!TMDB_KEY && !TMDB_TOKEN) return null;
+  try {
+    const kind = type === 'series' ? 'tv' : 'movie';
+    let id = tmdbId;
+    if (!id) {
+      const s = await tmdb(`/search/${kind}`, { query: title, ...(year ? { [kind === 'tv' ? 'first_air_date_year' : 'year']: year } : {}) });
+      id = s.results && s.results[0] && s.results[0].id;
+    }
+    if (!id) return null;
+    const d = await tmdb(`/${kind}/${id}`);
+    return (d.genres && d.genres[0] && d.genres[0].name) || null;
+  } catch { return null; }
+}
+
 function fromTmdb(x, type) {
   const date = x.release_date || x.first_air_date || '';
   return {
@@ -178,15 +238,31 @@ app.get('/api/admin/tmdb/search', requireAdmin, async (req, res) => {
   } catch (e) { res.status(e.status || 500).json({ error: e.message }); }
 });
 
+// Turns a YouTube link into a clean search term for TMDB: strips "Full Movie", years, quality tags, channel suffixes.
+app.get('/api/admin/youtube-title', requireAdmin, async (req, res) => {
+  const url = String(req.query.url || '');
+  if (!parseYouTube(url)) return res.status(400).json({ error: 'Not a valid YouTube video or playlist URL' });
+  const meta = await fetchOEmbed(url);
+  if (!meta || !meta.title) return res.status(404).json({ error: 'YouTube could not find that link (private, removed or embedding disabled)' });
+  let t = meta.title;
+  const year = (t.match(/\b(19[2-9]\d|20[0-4]\d)\b/) || [])[1] || null;
+  t = t.split(/\s[|–—]\s|\s-\s(?=.*(?:full|movie|hd|film|official))/i)[0];
+  t = t.replace(/[\(\[][^)\]]*[\)\]]/g, ' ')
+       .replace(/\b(full|new|latest|hindi|english|tamil|telugu|punjabi|bollywood|hollywood|dubbed|hd|4k|1080p|720p|movie|movies|film|official|episode|episodes|with english subtitles?|eng sub)\b/gi, ' ')
+       .replace(/\b(19[2-9]\d|20[0-4]\d)\b/g, ' ')
+       .replace(/[^\p{L}\p{N}'&:! ]+/gu, ' ').replace(/\s+/g, ' ').trim();
+  res.json({ raw: meta.title, query: t || meta.title, year: year ? Number(year) : null, channel: meta.author_name || null });
+});
+
 app.get('/api/admin/candidates', requireAdmin, (req, res) => res.json(loadCands()));
 
 app.post('/api/admin/candidates', requireAdmin, (req, res) => {
-  const { tmdbId, type, title, year, description, poster, backdrop } = req.body;
+  const { tmdbId, type, title, year, description, poster, backdrop, youtubeUrl, category } = req.body;
   if (!tmdbId || !title) return res.status(400).json({ error: 'Missing TMDB data' });
   const cands = loadCands();
   if (cands.some(c => c.tmdbId === tmdbId && c.type === type)) return res.status(409).json({ error: 'Already shortlisted' });
   if (loadTitles().some(t => t.tmdbId === tmdbId && t.type === type)) return res.status(409).json({ error: 'Already in the catalogue' });
-  const cand = { id: crypto.randomUUID(), tmdbId, type: type === 'series' ? 'series' : 'movie', title, year, description, poster, backdrop };
+  const cand = { id: crypto.randomUUID(), tmdbId, type: type === 'series' ? 'series' : 'movie', title, year, description, poster, backdrop, category: category || null, youtubeUrl: youtubeUrl || null };
   cands.unshift(cand);
   saveCands(cands);
   res.status(201).json(cand);
@@ -197,7 +273,7 @@ app.post('/api/admin/candidates/:id/approve', requireAdmin, async (req, res) => 
   const cands = loadCands();
   const cand = cands.find(c => c.id === req.params.id);
   if (!cand) return res.status(404).json({ error: 'Not found' });
-  const r = await publish({ ...cand, category: req.body.category }, req.body.url);
+  const r = await publish(cand, req.body.url);
   if (r.item) saveCands(cands.filter(c => c.id !== cand.id));
   res.status(r.status).json(r.item || { error: r.error });
 });
@@ -209,6 +285,39 @@ app.delete('/api/admin/candidates/:id', requireAdmin, (req, res) => {
 
 app.get('/api/admin/config', requireAdmin, (req, res) => res.json({ tmdb: !!(TMDB_KEY || TMDB_TOKEN) }));
 
+// admin: change a title's movie link and/or trailer link. An empty trailer link goes back to TMDB's trailer.
+app.patch('/api/titles/:id', requireAdmin, async (req, res) => {
+  const titles = loadTitles();
+  const t = titles.find(x => x.id === req.params.id);
+  if (!t) return res.status(404).json({ error: 'Not found' });
+  const { youtubeUrl, trailerUrl } = req.body;
+
+  if (youtubeUrl !== undefined) {
+    const yt = parseYouTube(String(youtubeUrl));
+    if (!yt) return res.status(400).json({ error: 'Watch link is not a valid YouTube video or playlist URL' });
+    if (titles.some(x => x.id !== t.id && x.youtubeId === yt.id)) return res.status(409).json({ error: 'That YouTube link is already used by another title' });
+    if (yt.id !== t.youtubeId) {
+      const meta = await fetchOEmbed(String(youtubeUrl));
+      if (!meta) return res.status(400).json({ error: 'YouTube could not find that link (private or removed?)' });
+      t.channel = meta.author_name || t.channel || null;
+    }
+    t.youtubeUrl = String(youtubeUrl).trim();
+    t.youtubeId = yt.id;
+    t.kind = yt.kind;
+  }
+  if (trailerUrl !== undefined) {
+    const raw = String(trailerUrl).trim();
+    if (!raw) delete t.trailerKey;
+    else {
+      const yt = parseYouTube(raw);
+      if (!yt || yt.kind !== 'video') return res.status(400).json({ error: 'Trailer link must be a YouTube video URL' });
+      t.trailerKey = yt.id;
+    }
+  }
+  saveTitles(titles);
+  res.json(t);
+});
+
 app.delete('/api/titles/:id', requireAdmin, (req, res) => {
   const titles = loadTitles();
   const next = titles.filter(t => t.id !== req.params.id);
@@ -216,5 +325,69 @@ app.delete('/api/titles/:id', requireAdmin, (req, res) => {
   saveTitles(next);
   res.json({ ok: true });
 });
+
+// ---------- title details (TMDB) ----------
+// Everything on the movie page beyond what we store: cast, reviews, trailer, similar titles.
+const detailCache = new Map();
+app.get('/api/titles/:id/details', async (req, res) => {
+  const all = loadTitles();
+  const t = all.find(x => x.id === req.params.id);
+  if (!t) return res.status(404).json({ error: 'Not found' });
+  const base = { title: t, details: t.trailerKey ? { trailer: t.trailerKey } : null };
+  if (!TMDB_KEY && !TMDB_TOKEN) return res.json(base);
+  try {
+    const kind = t.type === 'series' ? 'tv' : 'movie';
+    let tmdbId = t.tmdbId;
+    if (!tmdbId) {
+      const s = await tmdb(`/search/${kind}`, { query: t.title, ...(t.year ? { [kind === 'tv' ? 'first_air_date_year' : 'year']: t.year } : {}) });
+      tmdbId = s.results && s.results[0] && s.results[0].id;
+    }
+    if (!tmdbId) return res.json(base);
+    const key = kind + tmdbId;
+    if (!detailCache.has(key)) {
+      const d = await tmdb(`/${kind}/${tmdbId}`, { append_to_response: 'credits,reviews,videos,similar' });
+      const trailer = (d.videos?.results || []).find(v => v.site === 'YouTube' && v.type === 'Trailer') || (d.videos?.results || []).find(v => v.site === 'YouTube');
+      const onSite = new Map(all.filter(x => x.tmdbId).map(x => [x.tmdbId, x.id]));
+      detailCache.set(key, {
+        tagline: d.tagline || '',
+        overview: d.overview || '',
+        genres: (d.genres || []).map(g => g.name),
+        runtime: d.runtime || (d.episode_run_time || [])[0] || null,
+        rating: d.vote_average ? Math.round(d.vote_average * 10) / 10 : null,
+        votes: d.vote_count || 0,
+        language: d.original_language,
+        seasons: d.number_of_seasons || null,
+        backdrop: tmdbImg(d.backdrop_path, 'w1280'),
+        poster: tmdbImg(d.poster_path, 'w780'),
+        trailer: trailer ? trailer.key : null,
+        cast: (d.credits?.cast || []).slice(0, 14).map(c => ({ name: c.name, character: c.character, photo: tmdbImg(c.profile_path, 'w185') })),
+        crew: (d.credits?.crew || []).filter(c => ['Director', 'Writer', 'Screenplay', 'Producer'].includes(c.job)).slice(0, 6).map(c => ({ name: c.name, job: c.job })),
+        reviews: (d.reviews?.results || []).slice(0, 6).map(r => ({
+          author: r.author, rating: r.author_details?.rating ?? null, date: (r.created_at || '').slice(0, 10),
+          content: (r.content || '').length > 700 ? r.content.slice(0, 700).trim() + '...' : (r.content || ''), url: r.url
+        })),
+        similar: (d.similar?.results || []).filter(x => x.poster_path).slice(0, 12).map(x => ({ title: x.title || x.name, year: (x.release_date || x.first_air_date || '').slice(0, 4), poster: tmdbImg(x.poster_path, 'w342'), rating: Math.round((x.vote_average || 0) * 10) / 10 }))
+      });
+    }
+    const details = detailCache.get(key);
+    res.json({ title: t, details: t.trailerKey ? { ...details, trailer: t.trailerKey } : details });
+  } catch (e) {
+    res.json({ ...base, error: e.message });
+  }
+});
+
+refreshPopularity();
+setInterval(refreshPopularity, 24 * 60 * 60 * 1000); // TMDB recalculates popularity daily
+
+// Titles added before categories were automatic: fix any still stuck on "General".
+(async () => {
+  const titles = loadTitles();
+  let changed = 0;
+  for (const t of titles.filter(x => !x.category || x.category === 'General')) {
+    const c = await inferCategory(t);
+    if (c) { t.category = c; changed++; }
+  }
+  if (changed) { saveTitles(titles); console.log(`Categorised ${changed} existing title(s) from TMDB`); }
+})();
 
 app.listen(PORT, () => console.log(`YOUFLIX running at http://localhost:${PORT}`));

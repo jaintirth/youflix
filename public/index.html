@@ -4,32 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>YOUFLIX</title>
-<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/svg+xml" href="/brand/youflix-favicon.svg">
+<link rel="apple-touch-icon" href="/brand/youflix-app-icon.svg">
+<link rel="stylesheet" href="/style.css">
 </head>
-<body>
+<body class="home">
 <header>
-  <a class="logo" href="/">YOUFLIX</a>
-  <nav><a href="/admin.html">Admin</a></nav>
+  <a class="logo" href="/"><img class="on-dark" src="/brand/youflix-horizontal-dark.svg" alt="YouFlix"><img class="on-light" src="/brand/youflix-horizontal-light.svg" alt=""></a>
 </header>
 <section class="hero" id="hero" hidden></section>
 <main>
-  <div class="filters" id="filters"></div>
   <div id="rows"></div>
-</main>
-
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <button class="close" id="close" aria-label="Close">&times;</button>
-    <div id="player" class="poster"></div>
-    <div class="modal-body">
-      <h3 id="m-title"></h3>
-      <div id="m-meta" style="color:var(--muted);font-size:.85rem;margin-bottom:10px"></div>
-      <p id="m-desc"></p>
-      <a class="btn red" id="m-yt" target="_blank" rel="noopener">Watch on YouTube</a>
-      <p class="note">Opens on YouTube. All content is hosted and monetised by its owners there.</p>
-    </div>
+  <div class="promo">
+    <div><h3>Watch free. No sign-up.</h3><p>Every title is published for free on YouTube by its owner.</p></div>
   </div>
-</div>
-<script src="app.js"></script>
+</main>
+<footer>YOUFLIX hosts no video. All content is hosted and monetised by its owners on YouTube.</footer>
+
+<script src="/app.js"></script>
+<script src="/header.js"></script>
 </body>
 </html>

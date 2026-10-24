@@ -21,6 +21,8 @@ On Windows PowerShell: `$env:ADMIN_PASSWORD="your-password"; $env:TMDB_API_KEY="
 
 Get a free TMDB key at https://www.themoviedb.org/settings/api (a v4 token also works via `TMDB_TOKEN`). Without a key the manual add form still works.
 
+The banner (first 6) and Top 10 are ranked by TMDB's popularity score, refreshed daily. Titles without a score yet show newest first.
+
 Open http://localhost:3000, and http://localhost:3000/admin.html for the admin screen.
 
 ## Content policy

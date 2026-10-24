@@ -4,67 +4,86 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>YOUFLIX Admin</title>
-<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/svg+xml" href="/brand/youflix-favicon.svg">
+<link rel="stylesheet" href="/admin.css">
 </head>
 <body>
-<header>
-  <a class="logo" href="/">YOUFLIX</a>
-  <nav><a href="/">Back to site</a><a href="#" id="logout" hidden>Log out</a></nav>
-</header>
-<main>
-  <div class="panel" id="login" hidden>
-    <h2>Admin login</h2>
+<div class="top"><div class="top-in">
+  <a href="/"><img src="/brand/youflix-horizontal-dark.svg" alt="YouFlix"></a>
+  <span class="pill">Admin</span>
+  <span class="spacer"></span>
+  <a class="link" href="/">View site</a>
+  <button class="link" id="logout" hidden>Log out</button>
+</div></div>
+
+<div class="wrap">
+  <div class="card login" id="login" hidden>
+    <h2>Admin sign in</h2>
+    <p class="sub">Enter the admin password to manage the catalogue.</p>
     <label for="pw">Password</label>
     <input type="password" id="pw" autocomplete="current-password">
-    <p><button class="btn red" id="login-btn">Sign in</button></p>
+    <div class="actions"><button class="btn primary" id="login-btn">Sign in</button></div>
     <div class="msg err" id="login-msg"></div>
   </div>
 
   <div id="dash" hidden>
-    <div class="panel">
-      <h2>Add a movie or series</h2>
-      <p class="note" style="margin-top:-8px">Only add content that its owner has made free to watch on YouTube. Paste a video URL for a movie, or a playlist URL for a series.</p>
-      <label for="url">YouTube URL</label>
-      <input id="url" placeholder="https://www.youtube.com/watch?v=... or /playlist?list=...">
-      <div class="two">
-        <div><label for="type">Type</label>
-          <select id="type"><option value="movie">Movie</option><option value="series">Series</option></select></div>
-        <div><label for="category">Category</label><input id="category" placeholder="e.g. Drama" value="General"></div>
-      </div>
-      <div class="two">
-        <div><label for="year">Year (optional)</label><input id="year" type="number" min="1890" max="2100"></div>
-        <div><label for="title">Title override (optional)</label><input id="title" placeholder="Defaults to YouTube title"></div>
-      </div>
-      <label for="description">Description (optional)</label>
-      <textarea id="description" rows="3"></textarea>
-      <p><button class="btn red" id="add">Add to catalogue</button></p>
-      <div class="msg" id="add-msg"></div>
+    <div class="tabs" id="tabs">
+      <button class="tab on" data-tab="catalogue">Catalogue <span class="count" id="ccount">0</span></button>
+      <button class="tab" data-tab="add">Add title</button>
+      <button class="tab" data-tab="discover">Discover</button>
+      <button class="tab" data-tab="queue">Review queue <span class="count" id="qcount">0</span></button>
     </div>
 
-    <div class="panel wide">
-      <h2>Discover on TMDB</h2>
-      <p class="note" style="margin-top:-8px">Search TMDB, shortlist what looks right, then check YouTube yourself. Nothing is public until you paste a free YouTube link and approve it.</p>
-      <div class="two" style="grid-template-columns:1fr 130px auto">
-        <input id="tq" placeholder="Search a title...">
-        <select id="ttype"><option value="movie">Movie</option><option value="series">Series</option></select>
-        <button class="btn" id="tsearch">Search</button>
+    <section id="p-catalogue">
+      <div class="toolbar">
+        <input id="filter" placeholder="Search catalogue...">
+        <span class="total" id="total"></span>
       </div>
-      <div class="msg" id="t-msg"></div>
-      <div class="grid results" id="tresults"></div>
-      <div class="pager" id="tpager" hidden>
-        <button class="btn" id="tprev">&larr; Prev</button>
-        <span id="tpage"></span>
-        <button class="btn" id="tnext">Next &rarr;</button>
+      <div class="list" id="list"></div>
+    </section>
+
+    <section id="p-add" hidden>
+      <div class="card" style="max-width:680px">
+        <h2>Add title</h2>
+        <p class="sub">Only add content its owner has made free to watch on YouTube. Paste the video link; title and artwork are fetched automatically.</p>
+        <label for="url">YouTube link</label>
+        <input id="url" placeholder="https://www.youtube.com/watch?v=...">
+        <div class="grid2">
+          <div><label for="year">Year (optional)</label><input id="year" type="number" min="1890" max="2100" placeholder="2019"></div>
+          <div><label for="title">Title override (optional)</label><input id="title" placeholder="Defaults to YouTube title"></div>
+        </div>
+        <label for="description">Description (optional)</label>
+        <textarea id="description" rows="3"></textarea>
+        <p class="sub" style="margin:12px 0 0">Category is set automatically from TMDB genre.</p>
+        <div class="actions"><button class="btn primary" id="add">Add to catalogue</button></div>
+        <div class="msg" id="add-msg"></div>
       </div>
-    </div>
+    </section>
 
-    <h2>Review queue <span class="note" id="qcount"></span></h2>
-    <div id="queue"></div>
+    <section id="p-discover" hidden>
+      <div class="card">
+        <h2>Discover on TMDB</h2>
+        <p class="sub">Shortlist what looks right, then check YouTube yourself. Nothing goes public until you paste a free link and approve it.</p>
+        <label for="yturl">Find from a YouTube link</label>
+        <div class="inline"><input id="yturl" placeholder="Paste the free YouTube link; we read its title and search TMDB"><button class="btn primary" id="ytfind">Find on TMDB</button></div>
+        <div class="msg" id="yt-msg"></div>
+        <label for="tq">Or search by title</label>
+        <div class="inline"><input id="tq" placeholder="Search a title..."><select id="ttype" hidden><option value="movie">Movie</option></select><button class="btn" id="tsearch">Search</button></div>
+        <div class="msg" id="t-msg"></div>
+        <div class="results" id="tresults"></div>
+        <div class="pager" id="tpager" hidden>
+          <button class="btn sm" id="tprev">&larr; Prev</button><span id="tpage"></span><button class="btn sm" id="tnext">Next &rarr;</button>
+        </div>
+      </div>
+    </section>
 
-    <h2>Catalogue</h2>
-    <table><thead><tr><th></th><th>Title</th><th>Type</th><th>Category</th><th></th></tr></thead><tbody id="list"></tbody></table>
+    <section id="p-queue" hidden>
+      <h1>Review queue</h1>
+      <p class="sub">Find the free YouTube link for each shortlisted title, paste it, and publish.</p>
+      <div id="queue"></div>
+    </section>
   </div>
-</main>
-<script src="admin.js"></script>
+</div>
+<script src="/admin.js"></script>
 </body>
 </html>
