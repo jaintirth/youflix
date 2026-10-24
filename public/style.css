@@ -283,3 +283,17 @@ body.browsing .cat-head { padding-top:14px; }
   body.browsing main { padding-top:78px; }
 }
 @media (max-width:380px) { .cgrid { grid-template-columns:repeat(2,1fr); } }
+/* ---------- categories inside search ---------- */
+.sx-label { padding:10px 8px 6px; color:var(--muted); font-size:.72rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.sx-cats { display:flex; flex-wrap:wrap; gap:8px; padding:0 4px 8px; }
+.sx-cat { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; min-height:40px; border-radius:99px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.1); font-size:.9rem; }
+.sx-cat small { color:var(--muted); font-size:.75rem; }
+.sx-cat:hover { background:var(--text); color:#111; }
+.cat-clear { display:none; }
+@media (max-width:760px) {
+  /* phones pick categories from the search overlay instead of a sideways chip row */
+  .cats { display:none !important; }
+  body.browsing main { padding-top:84px; }
+  .cat-clear { display:inline-block; margin-left:14px; padding:6px 10px; border-radius:99px; background:rgba(255,255,255,.1); color:var(--text) !important; }
+  .sx-label { padding-left:0; } .sx-cats { padding-left:0; padding-right:0; }
+}

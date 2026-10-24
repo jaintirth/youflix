@@ -104,7 +104,7 @@ function render() {
   if (cat) {
     const list = shown.filter(t => t.category === cat);
     $('rows').innerHTML = list.length
-      ? `<div class="row-head cat-head"><h2>${esc(cat)}</h2><span>${list.length} title${list.length > 1 ? 's' : ''}</span></div><div class="cgrid">${list.map(t => tile(t)).join('')}</div>`
+      ? `<div class="row-head cat-head"><h2>${esc(cat)}</h2><span>${list.length} title${list.length > 1 ? 's' : ''}<a class="cat-clear" data-cat="" href="/">&times; Clear</a></span></div><div class="cgrid">${list.map(t => tile(t)).join('')}</div>`
       : `<div class="empty">No titles in “${esc(cat)}” yet. <a href="/" data-cat="" style="color:var(--red)">Browse all</a></div>`;
     return;
   }
