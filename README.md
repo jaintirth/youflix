@@ -1,0 +1,30 @@
+# YOUFLIX
+
+A Netflix-style front end for movies and series that are **already free on YouTube**. YOUFLIX hosts no video: every title plays through YouTube's official embedded player, with a "Watch on YouTube" link back to the source.
+
+## Phase 1 (this release)
+
+- Public browse page: hero banner, Movies / Series filter, rows grouped by category, click-to-watch modal
+- Admin page (`/admin.html`), password protected: paste a YouTube video URL (movie) or playlist URL (series); title and thumbnail are fetched from YouTube automatically
+- Remove titles from the catalogue
+- Storage in a local JSON file (`data/titles.json`)
+
+## Run
+
+```bash
+npm install
+ADMIN_PASSWORD=your-password npm start
+```
+
+On Windows PowerShell: `$env:ADMIN_PASSWORD="your-password"; npm start`
+
+Open http://localhost:3000, and http://localhost:3000/admin.html for the admin screen.
+
+## Content policy
+
+Only add titles that the rights holder has published for free on YouTube (e.g. an official movie channel). Do not add re-uploads.
+
+## Roadmap
+
+- Phase 2: individual episode lists for series, search, user accounts and "my list"
+- Phase 3: database, deployment, link-health checks for removed videos

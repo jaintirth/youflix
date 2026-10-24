@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YOUFLIX Admin</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <a class="logo" href="/">YOUFLIX</a>
+  <nav><a href="/">Back to site</a><a href="#" id="logout" hidden>Log out</a></nav>
+</header>
+<main>
+  <div class="panel" id="login" hidden>
+    <h2>Admin login</h2>
+    <label for="pw">Password</label>
+    <input type="password" id="pw" autocomplete="current-password">
+    <p><button class="btn red" id="login-btn">Sign in</button></p>
+    <div class="msg err" id="login-msg"></div>
+  </div>
+
+  <div id="dash" hidden>
+    <div class="panel">
+      <h2>Add a movie or series</h2>
+      <p class="note" style="margin-top:-8px">Only add content that its owner has made free to watch on YouTube. Paste a video URL for a movie, or a playlist URL for a series.</p>
+      <label for="url">YouTube URL</label>
+      <input id="url" placeholder="https://www.youtube.com/watch?v=... or /playlist?list=...">
+      <div class="two">
+        <div><label for="type">Type</label>
+          <select id="type"><option value="movie">Movie</option><option value="series">Series</option></select></div>
+        <div><label for="category">Category</label><input id="category" placeholder="e.g. Drama" value="General"></div>
+      </div>
+      <div class="two">
+        <div><label for="year">Year (optional)</label><input id="year" type="number" min="1890" max="2100"></div>
+        <div><label for="title">Title override (optional)</label><input id="title" placeholder="Defaults to YouTube title"></div>
+      </div>
+      <label for="description">Description (optional)</label>
+      <textarea id="description" rows="3"></textarea>
+      <p><button class="btn red" id="add">Add to catalogue</button></p>
+      <div class="msg" id="add-msg"></div>
+    </div>
+
+    <h2>Catalogue</h2>
+    <table><thead><tr><th></th><th>Title</th><th>Type</th><th>Category</th><th></th></tr></thead><tbody id="list"></tbody></table>
+  </div>
+</main>
+<script src="admin.js"></script>
+</body>
+</html>

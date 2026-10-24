@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YOUFLIX</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <a class="logo" href="/">YOUFLIX</a>
+  <nav><a href="/admin.html">Admin</a></nav>
+</header>
+<section class="hero" id="hero" hidden></section>
+<main>
+  <div class="filters" id="filters"></div>
+  <div id="rows"></div>
+</main>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <button class="close" id="close" aria-label="Close">&times;</button>
+    <div id="player"></div>
+    <div class="modal-body">
+      <h3 id="m-title"></h3>
+      <div id="m-meta" style="color:var(--muted);font-size:.85rem;margin-bottom:10px"></div>
+      <p id="m-desc"></p>
+      <a class="btn red" id="m-yt" target="_blank" rel="noopener">Watch on YouTube</a>
+      <p class="note">Streams from the official YouTube player. All content is hosted and monetised by its owners on YouTube.</p>
+    </div>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

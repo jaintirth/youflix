@@ -1,0 +1,52 @@
+:root { --bg:#141414; --card:#1f1f1f; --red:#e50914; --text:#f3f3f3; --muted:#9a9a9a; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+a { color: inherit; text-decoration: none; }
+header { display:flex; align-items:center; justify-content:space-between; padding:16px 4vw; background:linear-gradient(#000c,transparent); position:sticky; top:0; z-index:10; backdrop-filter: blur(6px); }
+.logo { color:var(--red); font-weight:900; font-size:1.8rem; letter-spacing:2px; }
+nav a { margin-left:20px; color:var(--muted); font-size:.95rem; }
+nav a:hover { color:var(--text); }
+.hero { padding:8vh 4vw 6vh; min-height:46vh; display:flex; flex-direction:column; justify-content:flex-end; background-size:cover; background-position:center top; position:relative; }
+.hero::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,#141414f0 15%,#14141455), linear-gradient(0deg,#141414,transparent 40%); }
+.hero > * { position:relative; z-index:1; max-width:560px; }
+.hero h1 { font-size:clamp(1.8rem,4vw,3rem); margin:0 0 10px; }
+.hero p { color:#ddd; line-height:1.5; margin:0 0 18px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.btn { display:inline-block; border:0; border-radius:4px; padding:10px 24px; font-size:1rem; font-weight:700; cursor:pointer; background:#fff; color:#000; }
+.btn:hover { background:#ddd; }
+.btn.red { background:var(--red); color:#fff; }
+.btn.red:hover { background:#f6121d; }
+main { padding:0 4vw 60px; }
+.filters { margin:24px 0 8px; display:flex; gap:10px; flex-wrap:wrap; }
+.chip { padding:6px 16px; border-radius:20px; border:1px solid #444; background:none; color:var(--muted); cursor:pointer; }
+.chip.active { background:#fff; color:#000; border-color:#fff; }
+.row h2 { font-size:1.2rem; margin:28px 0 12px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; }
+.card { background:var(--card); border-radius:6px; overflow:hidden; cursor:pointer; transition:transform .2s; position:relative; }
+.card:hover { transform:scale(1.04); z-index:2; }
+.card img { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; background:#333; }
+.card .info { padding:10px 12px 12px; }
+.card .t { font-weight:600; font-size:.95rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.card .m { color:var(--muted); font-size:.8rem; margin-top:4px; }
+.badge { position:absolute; top:8px; left:8px; background:var(--red); font-size:.7rem; font-weight:700; padding:2px 8px; border-radius:3px; }
+.empty { color:var(--muted); padding:60px 0; text-align:center; }
+.modal { position:fixed; inset:0; background:#000d; display:none; align-items:center; justify-content:center; z-index:50; padding:20px; }
+.modal.open { display:flex; }
+.modal-box { background:var(--card); border-radius:8px; width:min(960px,100%); max-height:95vh; overflow:auto; }
+.modal-box iframe { width:100%; aspect-ratio:16/9; border:0; display:block; background:#000; }
+.modal-body { padding:18px 22px 22px; }
+.modal-body h3 { margin:0 0 6px; font-size:1.4rem; }
+.modal-body p { color:#ccc; line-height:1.5; }
+.close { float:right; background:none; border:0; color:#fff; font-size:2rem; cursor:pointer; padding:4px 14px; }
+.note { color:var(--muted); font-size:.8rem; margin-top:12px; }
+/* admin */
+.panel { background:var(--card); border-radius:8px; padding:22px; max-width:640px; margin:30px 0; }
+.panel h2 { margin-top:0; }
+label { display:block; font-size:.85rem; color:var(--muted); margin:14px 0 4px; }
+input, select, textarea { width:100%; padding:10px; background:#2a2a2a; border:1px solid #3a3a3a; border-radius:4px; color:var(--text); font:inherit; }
+.two { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.msg { margin-top:12px; font-size:.9rem; }
+.msg.err { color:#ff6b6b; } .msg.ok { color:#5ad67d; }
+table { width:100%; border-collapse:collapse; max-width:900px; }
+td, th { text-align:left; padding:10px 8px; border-bottom:1px solid #2c2c2c; font-size:.9rem; }
+td img { width:96px; border-radius:4px; display:block; }
+.del { background:none; border:1px solid #555; color:#ff8a8a; border-radius:4px; padding:4px 12px; cursor:pointer; }
