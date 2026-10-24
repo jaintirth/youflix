@@ -14,10 +14,12 @@ A Netflix-style front end for movies and series that are **already free on YouTu
 
 ```bash
 npm install
-ADMIN_PASSWORD=your-password npm start
+ADMIN_PASSWORD=your-password TMDB_API_KEY=your-tmdb-key npm start
 ```
 
-On Windows PowerShell: `$env:ADMIN_PASSWORD="your-password"; npm start`
+On Windows PowerShell: `$env:ADMIN_PASSWORD="your-password"; $env:TMDB_API_KEY="your-tmdb-key"; npm start`
+
+Get a free TMDB key at https://www.themoviedb.org/settings/api (a v4 token also works via `TMDB_TOKEN`). Without a key the manual add form still works.
 
 Open http://localhost:3000, and http://localhost:3000/admin.html for the admin screen.
 
