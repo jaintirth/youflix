@@ -42,6 +42,7 @@ function parseYouTube(input) {
 async function fetchOEmbed(url) {
   try {
     const r = await fetch('https://www.youtube.com/oembed?format=json&url=' + encodeURIComponent(url));
+    if (r.status === 401) return { embedBlocked: true }; // video exists but the owner disabled embedding
     if (!r.ok) return null;
     return await r.json();
   } catch { return null; }
@@ -93,7 +94,7 @@ async function publish(base, url) {
     return { status: 409, error: 'That YouTube link is already in the catalogue' };
   }
   const meta = await fetchOEmbed(url);
-  if (!meta && !base.title) {
+  if ((!meta || !meta.title) && !base.title) {
     return { status: 400, error: 'YouTube could not find that link (private or removed?). Enter a title manually to add anyway.' };
   }
   const ytThumb = yt.kind === 'video'
@@ -112,7 +113,7 @@ async function publish(base, url) {
     thumbnail: base.backdrop || base.poster || ytThumb,
     poster: base.poster || null,
     tmdbId: base.tmdbId || null,
-    channel: meta ? meta.author_name : null,
+    channel: (meta && meta.author_name) || null,
     addedAt: new Date().toISOString()
   };
   titles.unshift(item);

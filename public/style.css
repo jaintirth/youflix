@@ -32,6 +32,7 @@ main { padding:0 4vw 60px; }
 .modal { position:fixed; inset:0; background:#000d; display:none; align-items:center; justify-content:center; z-index:50; padding:20px; }
 .modal.open { display:flex; }
 .modal-box { background:var(--card); border-radius:8px; width:min(960px,100%); max-height:95vh; overflow:auto; }
+.poster { aspect-ratio:16/9; background:#000 center/cover; }
 .modal-box iframe { width:100%; aspect-ratio:16/9; border:0; display:block; background:#000; }
 .modal-body { padding:18px 22px 22px; }
 .modal-body h3 { margin:0 0 6px; font-size:1.4rem; }

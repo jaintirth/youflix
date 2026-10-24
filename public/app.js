@@ -21,7 +21,7 @@ function render() {
     hero.style.backgroundImage = `url("${featured.thumbnail}")`;
     hero.innerHTML = `<h1>${esc(featured.title)}</h1><p>${esc(featured.description || 'Free to watch on YouTube.')}</p>
       <div><button class="btn" id="hero-play">&#9654; Watch</button></div>`;
-    $('hero-play').onclick = () => openTitle(featured.id);
+    $('hero-play').onclick = () => window.open(featured.youtubeUrl, '_blank', 'noopener');
   } else hero.hidden = true;
 
   $('filters').innerHTML = ['all', 'movie', 'series'].map(f =>
@@ -38,23 +38,18 @@ function render() {
   document.querySelectorAll('.card').forEach(el => el.onclick = () => openTitle(el.dataset.id));
 }
 
-function embedUrl(t) {
-  return t.kind === 'playlist'
-    ? `https://www.youtube-nocookie.com/embed/videoseries?list=${encodeURIComponent(t.youtubeId)}&autoplay=1`
-    : `https://www.youtube-nocookie.com/embed/${encodeURIComponent(t.youtubeId)}?autoplay=1`;
-}
-
+// Many owners disable embedding, so titles always open on YouTube itself.
 function openTitle(id) {
   const t = titles.find(x => x.id === id);
   if (!t) return;
-  $('player').innerHTML = `<iframe src="${embedUrl(t)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+  $('player').style.backgroundImage = `url("${t.thumbnail || ''}")`;
   $('m-title').textContent = t.title;
   $('m-meta').textContent = [t.type === 'series' ? 'Series' : 'Movie', t.year, t.category, t.channel && 'via ' + t.channel].filter(Boolean).join(' · ');
   $('m-desc').textContent = t.description || '';
   $('m-yt').href = t.youtubeUrl;
   $('modal').classList.add('open');
 }
-function closeModal() { $('modal').classList.remove('open'); $('player').innerHTML = ''; }
+function closeModal() { $('modal').classList.remove('open'); }
 $('close').onclick = closeModal;
 $('modal').onclick = e => { if (e.target === $('modal')) closeModal(); };
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
