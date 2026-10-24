@@ -153,7 +153,7 @@ body.scrolled nav a { color:#6b6b75; }
 body.scrolled nav a:hover, body.scrolled nav a.active { color:#0E0E12; }
 
 /* ---------- mobile ---------- */
-@media (hover:none) { .arrow { display:none !important; } .tile:hover { transform:none; } }
+@media (hover:none) { .hero-arrow { display:none !important; } .hero { touch-action:pan-y; } .arrow { display:none !important; } .tile:hover { transform:none; } }
 @media (max-width:760px) {
   header { min-height:56px; padding:0 5vw; }
   .logo img { height:28px; }
