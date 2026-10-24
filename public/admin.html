@@ -41,6 +41,21 @@
       <div class="msg" id="add-msg"></div>
     </div>
 
+    <div class="panel wide">
+      <h2>Discover on TMDB</h2>
+      <p class="note" style="margin-top:-8px">Search TMDB, shortlist what looks right, then check YouTube yourself. Nothing is public until you paste a free YouTube link and approve it.</p>
+      <div class="two" style="grid-template-columns:1fr 130px auto">
+        <input id="tq" placeholder="Search a title...">
+        <select id="ttype"><option value="movie">Movie</option><option value="series">Series</option></select>
+        <button class="btn" id="tsearch">Search</button>
+      </div>
+      <div class="msg" id="t-msg"></div>
+      <div class="grid results" id="tresults"></div>
+    </div>
+
+    <h2>Review queue <span class="note" id="qcount"></span></h2>
+    <div id="queue"></div>
+
     <h2>Catalogue</h2>
     <table><thead><tr><th></th><th>Title</th><th>Type</th><th>Category</th><th></th></tr></thead><tbody id="list"></tbody></table>
   </div>

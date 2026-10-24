@@ -1,4 +1,4 @@
-# YOUFLIX
+﻿# YOUFLIX
 
 A Netflix-style front end for movies and series that are **already free on YouTube**. YOUFLIX hosts no video: every title plays through YouTube's official embedded player, with a "Watch on YouTube" link back to the source.
 
@@ -6,6 +6,7 @@ A Netflix-style front end for movies and series that are **already free on YouTu
 
 - Public browse page: hero banner, Movies / Series filter, rows grouped by category, click-to-watch modal
 - Admin page (`/admin.html`), password protected: paste a YouTube video URL (movie) or playlist URL (series); title and thumbnail are fetched from YouTube automatically
+- TMDB discovery: search TMDB for movies/series and shortlist them into a review queue. Nothing is public until you check YouTube yourself, paste the free link and click Approve & publish (needs a free TMDB key)
 - Remove titles from the catalogue
 - Storage in a local JSON file (`data/titles.json`)
 
@@ -28,3 +29,4 @@ Only add titles that the rights holder has published for free on YouTube (e.g. a
 
 - Phase 2: individual episode lists for series, search, user accounts and "my list"
 - Phase 3: database, deployment, link-health checks for removed videos
+

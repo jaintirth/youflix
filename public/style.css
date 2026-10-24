@@ -39,6 +39,20 @@ main { padding:0 4vw 60px; }
 .close { float:right; background:none; border:0; color:#fff; font-size:2rem; cursor:pointer; padding:4px 14px; }
 .note { color:var(--muted); font-size:.8rem; margin-top:12px; }
 /* admin */
+.panel.wide { max-width:900px; }
+.results { margin-top:16px; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); }
+.results .card { cursor:default; }
+.results .card:hover { transform:none; }
+.results img { aspect-ratio:2/3; }
+.results .btn, .qitem .btn { padding:6px 12px; font-size:.85rem; margin-top:8px; width:100%; }
+.qitem { display:flex; gap:16px; background:var(--card); border-radius:8px; padding:14px; margin-bottom:12px; max-width:900px; }
+.qitem img { width:90px; border-radius:4px; align-self:flex-start; }
+.qitem .body { flex:1; min-width:0; }
+.qitem p { color:#bbb; font-size:.85rem; margin:6px 0; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.qitem .row2 { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.qitem .row2 input { flex:1; min-width:200px; }
+.qitem .row2 .btn { width:auto; margin:0; }
+.qitem a.yt { color:#6cb6ff; font-size:.85rem; }
 .panel { background:var(--card); border-radius:8px; padding:22px; max-width:640px; margin:30px 0; }
 .panel h2 { margin-top:0; }
 label { display:block; font-size:.85rem; color:var(--muted); margin:14px 0 4px; }
