@@ -67,6 +67,30 @@ let paused = false;
 $('hero').onmouseenter = () => { paused = true; };
 $('hero').onmouseleave = () => { paused = false; };
 
+// ---------- stats counters (count 0 → n once, when scrolled into view) ----------
+let statsDone = false;
+function runStats() {
+  const box = $('stats'), count = titles.filter(t => t.type !== 'series').length;
+  const movies = Math.max(5, Math.floor((count - 1) / 5) * 5); // 26-30 → 25+, 31-35 → 30+
+  box.hidden = !count;
+  if (statsDone || !count) return;
+  const targets = [[$('stat-movies'), movies]];
+  const paint = (el, v) => { el.textContent = `${v}+`; };
+  const go = () => {
+    statsDone = true;
+    const DUR = 2500, t0 = performance.now();
+    const step = now => {
+      const p = Math.min((now - t0) / DUR, 1), eased = 1 - Math.pow(1 - p, 3);
+      targets.forEach(([el, n]) => paint(el, Math.round(eased * n)));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+  targets.forEach(([el, n]) => { el.setAttribute('aria-label', `${n} plus`); paint(el, 0); });
+  if (!('IntersectionObserver' in window)) return go();
+  new IntersectionObserver((es, io) => { if (es[0].isIntersecting) { io.disconnect(); go(); } }, { threshold: 0.4 }).observe(box);
+}
+
 // Touch: swipe the hero left/right to change slide (vertical scrolling is left alone).
 let touch = null;
 $('hero').addEventListener('touchstart', e => {
@@ -93,6 +117,7 @@ function render() {
     if (!$('hero').children.length) { showSlide(0); restartTimer(); }
   } else $('hero').hidden = true;
 
+  runStats();
   document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('active', a.dataset.nav === filter));
 
   if (!shown.length) {
