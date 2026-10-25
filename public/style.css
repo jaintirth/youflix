@@ -212,9 +212,13 @@ body.scrolled nav a:hover, body.scrolled nav a.active { color:#0E0E12; }
 .trailer-play span { width:76px; height:76px; border-radius:50%; background:var(--grad); display:grid; place-items:center; font-size:1.8rem; box-shadow:0 8px 28px rgba(0,0,0,.5); }
 #tr-sec { scroll-margin-top:90px; }
 
-/* movie count stat */
-.stat { margin:0 4vw 6px; padding:28px 16px; text-align:center; border-radius:22px; background:var(--bg2); border:1px solid rgba(255,255,255,.08); }
-.stat[hidden] { display:none; }
-.stat-num { font-size:clamp(3rem,10vw,5.5rem); font-weight:900; line-height:1; font-variant-numeric:tabular-nums; background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
-.stat-label { margin-top:8px; font-size:.8rem; font-weight:700; letter-spacing:3px; color:var(--muted); }
-@media (max-width:760px) { .stat { margin:0 5vw 4px; padding:20px 12px; border-radius:16px; } }
+/* stats counters */
+.stats { margin:44px 4vw 0; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; }
+.stats[hidden] { display:none; }
+.stat-card { position:relative; padding:34px 20px; text-align:center; border-radius:18px; background:linear-gradient(160deg,#14141c,#0b0b10); border:1px solid rgba(255,255,255,.08); overflow:hidden; transition:transform .3s, border-color .3s, box-shadow .3s; }
+.stat-card::before { content:""; position:absolute; left:50%; top:0; width:60%; height:2px; transform:translateX(-50%); background:var(--grad); opacity:.7; border-radius:2px; }
+.stat-card:hover { transform:translateY(-4px); border-color:rgba(255,61,90,.45); box-shadow:0 12px 40px rgba(255,61,90,.18); }
+.stat-num { font-size:clamp(2.8rem,9vw,4.6rem); font-weight:900; line-height:1; font-variant-numeric:tabular-nums; background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.stat-label { margin-top:10px; font-size:.8rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--muted); }
+@media (max-width:760px) { .stats { margin:30px 5vw 0; gap:12px; } .stat-card { padding:26px 14px; border-radius:14px; } }
+@media (hover:none) { .stat-card:hover { transform:none; } }
