@@ -72,12 +72,10 @@ function runStats() {
   const box = $('stats'), movies = titles.filter(t => t.type !== 'series').length;
   box.hidden = !movies;
   if (statsDone || !movies) return;
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const targets = [[$('stat-movies'), movies]];
   const paint = (el, v) => { el.textContent = `${v}+`; };
   const go = () => {
     statsDone = true;
-    if (reduce) return targets.forEach(([el, n]) => paint(el, n));
     const DUR = 1800, t0 = performance.now();
     const step = now => {
       const p = Math.min((now - t0) / DUR, 1), eased = 1 - Math.pow(1 - p, 3);
@@ -86,7 +84,7 @@ function runStats() {
     };
     requestAnimationFrame(step);
   };
-  targets.forEach(([el, n]) => { el.setAttribute('aria-label', `${n} plus`); paint(el, reduce ? n : 0); });
+  targets.forEach(([el, n]) => { el.setAttribute('aria-label', `${n} plus`); paint(el, 0); });
   if (!('IntersectionObserver' in window)) return go();
   new IntersectionObserver((es, io) => { if (es[0].isIntersecting) { io.disconnect(); go(); } }, { threshold: 0.4 }).observe(box);
 }
