@@ -69,9 +69,10 @@ $('hero').onmouseleave = () => { paused = false; };
 // ---------- stats counters (count 0 → n once, when scrolled into view) ----------
 let statsDone = false;
 function runStats() {
-  const box = $('stats'), movies = titles.filter(t => t.type !== 'series').length;
-  box.hidden = !movies;
-  if (statsDone || !movies) return;
+  const box = $('stats'), count = titles.filter(t => t.type !== 'series').length;
+  const movies = Math.max(5, Math.floor((count - 1) / 5) * 5); // 26-30 → 25+, 31-35 → 30+
+  box.hidden = !count;
+  if (statsDone || !count) return;
   const targets = [[$('stat-movies'), movies]];
   const paint = (el, v) => { el.textContent = `${v}+`; };
   const go = () => {
