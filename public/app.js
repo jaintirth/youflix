@@ -76,7 +76,7 @@ function runStats() {
   const paint = (el, v) => { el.textContent = `${v}+`; };
   const go = () => {
     statsDone = true;
-    const DUR = 1800, t0 = performance.now();
+    const DUR = 1000, t0 = performance.now();
     const step = now => {
       const p = Math.min((now - t0) / DUR, 1), eased = 1 - Math.pow(1 - p, 3);
       targets.forEach(([el, n]) => paint(el, Math.round(eased * n)));
