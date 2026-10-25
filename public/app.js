@@ -66,6 +66,31 @@ let paused = false;
 $('hero').onmouseenter = () => { paused = true; };
 $('hero').onmouseleave = () => { paused = false; };
 
+// ---------- movie count stat (counts 1 → n once, when scrolled into view) ----------
+let statDone = false;
+function runStat() {
+  const box = $('stat'), num = $('stat-num'), n = titles.length;
+  if (statDone || !n) { if (!n) box.hidden = true; return; }
+  box.hidden = false;
+  num.setAttribute('aria-label', `${n} movies`);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const go = () => {
+    statDone = true;
+    if (reduce || n < 2) { num.textContent = `${n}+`; return; }
+    const DUR = Math.min(2200, 900 + n * 12), t0 = performance.now();
+    const step = now => {
+      const p = Math.min((now - t0) / DUR, 1), eased = 1 - Math.pow(1 - p, 3);
+      num.textContent = `${Math.max(1, Math.round(eased * n))}+`;
+      if (p < 1) requestAnimationFrame(step);
+    };
+    num.textContent = '1+';
+    requestAnimationFrame(step);
+  };
+  num.textContent = `${reduce ? n : 1}+`;
+  if (!('IntersectionObserver' in window)) return go();
+  new IntersectionObserver((es, io) => { if (es[0].isIntersecting) { io.disconnect(); go(); } }, { threshold: 0.6 }).observe(box);
+}
+
 function render() {
   const shown = titles.filter(t => filter === 'all' || t.type === filter);
 
@@ -74,6 +99,7 @@ function render() {
     if (!$('hero').children.length) { showSlide(0); restartTimer(); }
   } else $('hero').hidden = true;
 
+  runStat();
   document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('active', a.dataset.nav === filter));
 
   if (!shown.length) {
