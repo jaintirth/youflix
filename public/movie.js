@@ -57,10 +57,11 @@ function loadSimilar(t) { fetch('/api/titles').then(r => r.json()).then(all => {
   const series = pool.map(x => ({ x, f: franchise(x.title) })).filter(({ f }) => me.key.length >= 3 && f.key === me.key)
     .sort((a, b) => a.f.n - b.f.n || (+a.x.year || 0) - (+b.x.year || 0)).map(({ x }) => x);
   const seen = new Set(series.map(x => x.id));
-  // anime share any genre ("Animation" says nothing); everything else shares its one category
-  const genresOf = x => x.isAnime && (x.genres || []).length ? x.genres.filter(g => g !== 'Animation') : [x.category].filter(Boolean);
-  const mine = genresOf(t);
-  const rest = pool.filter(x => !seen.has(x.id) && genresOf(x).some(g => mine.includes(g)));
+  // Same category as this title: an anime counts when that category is any of its genres ("Animation" says nothing),
+  // so One-Punch Man (Comedy) lists the anime that sit in the Comedy row; its own-category matches come first.
+  const catsOf = x => x.isAnime && (x.genres || []).length ? x.genres.filter(g => g !== 'Animation') : [x.category].filter(Boolean);
+  const rest = pool.filter(x => !seen.has(x.id) && t.category && t.category !== 'Animation' && catsOf(x).includes(t.category))
+    .sort((a, b) => (b.category === t.category) - (a.category === t.category));
   const others = [...series, ...rest];
   if (!others.length) return;
   document.getElementById('sim').innerHTML = others.slice(0, 12).map(s =>
