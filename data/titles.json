@@ -1,5 +1,147 @@
 [
   {
+    "id": "2f61f90f-0589-4771-9b49-74b0b7940c95",
+    "type": "series",
+    "isAnime": true,
+    "title": "Made in Abyss",
+    "description": "Located in the center of a remote island, the Abyss is the last unexplored region, a huge and treacherous fathomless hole inhabited by strange creatures where only the bravest adventurers descend in search of ancient relics. In the upper levels of the Abyss, Riko, a girl who dreams of becoming an explorer, stumbles upon a mysterious little boy.",
+    "category": "Drama",
+    "genres": [
+      "Animation",
+      "Drama",
+      "Action & Adventure",
+      "Sci-Fi & Fantasy"
+    ],
+    "year": 2017,
+    "kind": "playlist",
+    "youtubeId": "PLpm1VVK4UL14RSvooJFV6H8Sp2-blI8BJ",
+    "youtubeUrl": "https://youtube.com/playlist?list=PLpm1VVK4UL14RSvooJFV6H8Sp2-blI8BJ&si=gWpi0aUkeyjGULJG",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/uzp513qTcHsAavlCJ58x5d73bzy.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/n30CBH4BoN5Z34tCpOWIPGJYOaS.jpg",
+    "tmdbId": 72636,
+    "channel": "Muse India",
+    "addedAt": "2026-10-31T08:10:36.628Z",
+    "popularity": 3.51
+  },
+  {
+    "id": "ffbe584f-9408-4c32-a69a-2865b7eceebd",
+    "type": "series",
+    "isAnime": true,
+    "title": "Dan Da Dan",
+    "description": "In a bet to prove whether ghosts or aliens exist, two high schoolers face terrifying paranormal threats, gain superpowers and maybe even fall in love?!",
+    "category": "Action & Adventure",
+    "genres": [
+      "Animation",
+      "Action & Adventure",
+      "Comedy",
+      "Sci-Fi & Fantasy"
+    ],
+    "year": 2024,
+    "kind": "playlist",
+    "youtubeId": "PLwLSw1_eDZl2OF_CmbcBOUk_216rwS1wD",
+    "youtubeUrl": "https://youtube.com/playlist?list=PLwLSw1_eDZl2OF_CmbcBOUk_216rwS1wD&si=2AR7hOzLbSeX-Oif",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/uNTrRKIOyKYISthoeizghtXPEOK.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/6qfZAOEUFIrbUH3JvePclx1nXzz.jpg",
+    "tmdbId": 240411,
+    "channel": "Muse Asia",
+    "addedAt": "2026-10-31T08:10:34.835Z",
+    "popularity": 0.78
+  },
+  {
+    "id": "f1dba067-a525-4b5f-904d-dd8b8246859b",
+    "type": "series",
+    "isAnime": true,
+    "title": "Fairy Tail",
+    "description": "Lucy is a 17-year-old girl, who wants to be a full-fledged mage. One day when visiting Harujion Town, she meets Natsu, a young man who gets sick easily by any type of transportation. But Natsu isn't just any ordinary kid, he's a member of one of the world's most infamous mage guilds: Fairy Tail.",
+    "category": "Action & Adventure",
+    "genres": [
+      "Animation",
+      "Action & Adventure",
+      "Comedy",
+      "Sci-Fi & Fantasy"
+    ],
+    "year": 2009,
+    "kind": "video",
+    "youtubeId": "wyKA_h1PBGg",
+    "youtubeUrl": "https://youtu.be/wyKA_h1PBGg",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/bifZUqMGfI2WdPMLKQAiTsJbwCj.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/AsfCVSHnFnUnbepLucvIB1N30Il.jpg",
+    "tmdbId": 46261,
+    "channel": "Muse Asia",
+    "addedAt": "2026-10-31T08:10:32.864Z",
+    "popularity": 4.38
+  },
+  {
+    "id": "6da8e841-f8e7-47b0-b479-700dd5e7b12b",
+    "type": "series",
+    "isAnime": true,
+    "title": "The God of High School",
+    "description": "Jin Mori has proclaimed himself the strongest high schooler. His life changes when he's invited to participate in \"God of High School,\" a tournament to determine the strongest high schooler of all. He's told that if he wins, any wish he makes will be granted... All the participants are powerful contenders who fight their hardest for their own wishes. What awaits them at the end of the tournament? A chaotic battle between unbelievably strong high school students is about to begin!",
+    "category": "Comedy",
+    "genres": [
+      "Animation",
+      "Comedy",
+      "Action & Adventure",
+      "Sci-Fi & Fantasy"
+    ],
+    "year": 2020,
+    "kind": "video",
+    "youtubeId": "p_YbpHDBhzc",
+    "youtubeUrl": "https://youtu.be/p_YbpHDBhzc",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/7hQ4jjfuH04stb1d4H2u4CLoQvu.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/lfa79lR34s6eyNkKjqC76uQEihh.jpg",
+    "tmdbId": 99778,
+    "channel": "Muse Asia",
+    "addedAt": "2026-10-31T08:10:30.366Z"
+  },
+  {
+    "id": "e6e0a19b-0503-4d93-b8d3-c9326ff93954",
+    "type": "series",
+    "isAnime": true,
+    "title": "Mob Psycho 100",
+    "description": "Shigeo Kageyama, a.k.a. \"Mob,\" is a boy who has trouble expressing himself, but who happens to be a powerful esper. Mob is determined to live a normal life and keeps his ESP suppressed, but when his emotions surge to a level of 100%, something terrible happens to him! As he's surrounded by false espers, evil spirits, and mysterious organizations, what will Mob think? What choices will he make?",
+    "category": "Action & Adventure",
+    "genres": [
+      "Animation",
+      "Action & Adventure",
+      "Comedy",
+      "Sci-Fi & Fantasy"
+    ],
+    "year": 2016,
+    "kind": "playlist",
+    "youtubeId": "PLwLSw1_eDZl1pvIv1fBd3oKkP3XEQpT_G",
+    "youtubeUrl": "https://youtube.com/playlist?list=PLwLSw1_eDZl1pvIv1fBd3oKkP3XEQpT_G&si=PlB8u_yvzpk3On-s",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/kP5duNJEbTfXpBs6CITsaZ88pQi.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/vR7hwaGQ0ySRoq1WobiNRaPs4WO.jpg",
+    "tmdbId": 67075,
+    "channel": "Muse Asia",
+    "addedAt": "2026-10-31T08:10:28.944Z",
+    "popularity": 1.56
+  },
+  {
+    "id": "445b3425-60bb-473e-a916-87292ddf444b",
+    "type": "series",
+    "isAnime": true,
+    "title": "JoJo's Bizarre Adventure",
+    "description": "Follow the intergenerational feud between the Joestar Family and various forces of evil, the most prominent of which is Dio Brando and his followers.",
+    "category": "Action & Adventure",
+    "genres": [
+      "Animation",
+      "Action & Adventure",
+      "Sci-Fi & Fantasy"
+    ],
+    "year": 2012,
+    "kind": "playlist",
+    "youtubeId": "PLOI38yjlUfzOVDzWFy29Nt1idbjnUgsMg",
+    "youtubeUrl": "https://youtube.com/playlist?list=PLOI38yjlUfzOVDzWFy29Nt1idbjnUgsMg&si=FZLX6J_bE052Vy9z",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/l2gc2dPRUPe3bAfYCRTjc6uAMmB.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/ogAWwbh3frWtiTyyXrZaVFtqCgp.jpg",
+    "tmdbId": 45790,
+    "channel": "Matias",
+    "addedAt": "2026-10-31T08:10:26.997Z",
+    "popularity": 1.14
+  },
+  {
     "id": "efd6daf6-b64e-44c0-9a52-17ccdd68bd0d",
     "type": "series",
     "isAnime": true,
@@ -15,7 +157,7 @@
     "tmdbId": 62110,
     "channel": "Muse Asia",
     "addedAt": "2026-10-31T07:31:13.921Z",
-    "popularity": 0.86,
+    "popularity": 0.84,
     "genres": [
       "Animation",
       "Comedy",
@@ -86,7 +228,7 @@
     "tmdbId": 94664,
     "channel": "Muse Asia",
     "addedAt": "2026-10-31T07:31:08.593Z",
-    "popularity": 1.43,
+    "popularity": 1.38,
     "genres": [
       "Action & Adventure",
       "Animation",
@@ -659,7 +801,7 @@
     "tmdbId": 264085,
     "channel": "T-Series",
     "addedAt": "2026-10-25T12:41:49.283Z",
-    "popularity": 1.5
+    "popularity": 1.31
   },
   {
     "id": "657b2fb9-fa7d-4f8b-8aea-fc5981de46b5",
@@ -1203,7 +1345,7 @@
     "tmdbId": 204435,
     "channel": null,
     "addedAt": "2026-10-24T15:18:05.591Z",
-    "popularity": 2.29
+    "popularity": 2.26
   },
   {
     "id": "bdd584a6-5a83-414c-b154-526867e64307",
@@ -1392,7 +1534,7 @@
     "tmdbId": 20359,
     "channel": "Shemaroo Comedy",
     "addedAt": "2026-10-24T09:50:44.191Z",
-    "popularity": 1.51
+    "popularity": 1.66
   },
   {
     "id": "3d823a86-8372-4170-a146-3e5eb28ca7ef",
