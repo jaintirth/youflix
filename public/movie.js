@@ -53,14 +53,18 @@ function franchise(title) {
 // "More like this": franchise entries (sequels/prequels) first, then the rest of the same category.
 function loadSimilar(t) { fetch('/api/titles').then(r => r.json()).then(all => {
   const me = franchise(t.title);
-  const pool = all.filter(x => x.id !== t.id);
+  const pool = all.filter(x => x.id !== t.id && !!x.isAnime === !!t.isAnime); // anime stays with anime, movies with movies
   const series = pool.map(x => ({ x, f: franchise(x.title) })).filter(({ f }) => me.key.length >= 3 && f.key === me.key)
     .sort((a, b) => a.f.n - b.f.n || (+a.x.year || 0) - (+b.x.year || 0)).map(({ x }) => x);
   const seen = new Set(series.map(x => x.id));
-  const rest = pool.filter(x => !seen.has(x.id) && x.category && x.category === t.category);
+  // anime share any genre ("Animation" says nothing); everything else shares its one category
+  const genresOf = x => x.isAnime && (x.genres || []).length ? x.genres.filter(g => g !== 'Animation') : [x.category].filter(Boolean);
+  const mine = genresOf(t);
+  const rest = pool.filter(x => !seen.has(x.id) && genresOf(x).some(g => mine.includes(g)));
   const others = [...series, ...rest];
   if (!others.length) return;
   document.getElementById('sim').innerHTML = others.slice(0, 12).map(s =>
     `<a class="sim" href="/movie/${encodeURIComponent(s.id)}"><img src="${esc(tmdbSize(s.poster || s.thumbnail, 'w342'))}" alt="" loading="lazy"><b>${esc(s.title)}</b><span>${[s.year, s.category].filter(Boolean).map(esc).join(' · ')}</span></a>`).join('');
+  if (t.isAnime) document.querySelector('#sim-sec h2').textContent = 'More Anime Like This';
   document.getElementById('sim-sec').hidden = false;
 }); }
