@@ -39,7 +39,7 @@
   const load = () => loading ||= fetch('/api/titles').then(r => r.json()).then(list => {
     index = list.map((t, i) => ({ t, i, title: norm(t.title), other: [norm(t.category), norm(t.channel), norm(t.year), t.type === 'series' ? 'series' : 'movie'] }));
     const n = {};
-    list.forEach(t => { if (t.category) n[t.category] = (n[t.category] || 0) + 1; });
+    list.forEach(t => { if (t.category && !t.isAnime) n[t.category] = (n[t.category] || 0) + 1; });
     cats = Object.entries(n).map(([name, count]) => ({ name, count, key: norm(name) }));
   }).catch(() => { index = []; });
 
@@ -150,7 +150,7 @@
       if (input.value.trim() !== q) return;
       const found = search(q);
       results.innerHTML = found.length
-        ? `<h2 class="r-head">${found.length} result${found.length > 1 ? 's' : ''} for “${h(q)}”</h2><div class="rgrid">${found.map(t => `<a class="tile" href="${href(t)}"><div class="thumb">${t.type === 'series' ? '<span class="badge">SERIES</span>' : ''}<img src="${h(poster(t))}" alt="" loading="lazy"></div><div class="info show"><div class="t">${h(t.title)}</div><div class="m">${meta(t)}</div></div></a>`).join('')}</div>`
+        ? `<h2 class="r-head">${found.length} result${found.length > 1 ? 's' : ''} for “${h(q)}”</h2><div class="rgrid">${found.map(t => `<a class="tile" href="${href(t)}"><div class="thumb"><img src="${h(poster(t))}" alt="" loading="lazy"></div><div class="info show"><div class="t">${h(t.title)}</div><div class="m">${meta(t)}</div></div></a>`).join('')}</div>`
         : `<div class="empty"><b>No results for “${h(q)}”</b><br>Try a different title, genre or channel.</div>`;
       scrollTo(0, 0);
     });

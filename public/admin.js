@@ -8,6 +8,16 @@ function show(admin) {
   if (admin) { loadList(); loadQueue(); }
 }
 
+// Toggle buttons: aria-pressed carries the state; clicks are handled once, here.
+const animeToggle = (cls, on) => `<button type="button" class="tog sm ${cls}" aria-pressed="${!!on}"><span class="knob"></span><span class="txt"><b>Anime</b></span></button>`;
+const isOn = el => el.getAttribute('aria-pressed') === 'true';
+document.addEventListener('click', e => {
+  const tog = e.target.closest('.tog');
+  if (tog) { tog.setAttribute('aria-pressed', String(!isOn(tog))); return; }
+  const seg = e.target.closest('.seg button');
+  if (seg) seg.parentElement.querySelectorAll('button').forEach(b => { b.classList.toggle('on', b === seg); b.setAttribute('aria-pressed', String(b === seg)); });
+});
+
 let allTitles = [];
 async function loadList() {
   allTitles = await (await fetch('/api/titles')).json();
@@ -27,6 +37,7 @@ function renderList() {
     </div>
     <div class="drawer" hidden>
       <label>Watch link (YouTube)</label><input class="e-movie" value="${esc(t.youtubeUrl || '')}">
+      ${animeToggle('e-anime', t.isAnime)}
       <label>Trailer link (YouTube) <span style="font-weight:400">- leave empty to use TMDB's trailer${t.trailerKey ? '; a custom trailer is set' : ''}</span></label>
       <input class="e-trailer" value="${esc(t.trailerKey ? 'https://www.youtube.com/watch?v=' + t.trailerKey : '')}" placeholder="https://www.youtube.com/watch?v=...">
       <div class="actions"><button class="btn primary sm e-save">Save</button><button class="btn sm e-cancel">Cancel</button></div>
@@ -46,7 +57,7 @@ function renderList() {
       msg.className = 'msg e-msg'; msg.textContent = 'Saving...';
       try {
         await api('/api/titles/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ youtubeUrl: el.querySelector('.e-movie').value, trailerUrl: el.querySelector('.e-trailer').value }) });
+          body: JSON.stringify({ youtubeUrl: el.querySelector('.e-movie').value, trailerUrl: el.querySelector('.e-trailer').value, isAnime: isOn(el.querySelector('.e-anime')) }) });
         msg.className = 'msg e-msg ok'; msg.textContent = 'Saved';
         setTimeout(loadList, 700);
       } catch (e) { msg.className = 'msg e-msg err'; msg.textContent = e.message; }
@@ -77,7 +88,7 @@ let tquery = { q: '', type: 'movie' }; // the search being paged, so editing the
 
 async function tmdbSearch(page = 1) {
   const msg = $('t-msg');
-  if (page === 1) tquery = { q: $('tq').value, type: $('ttype').value };
+  if (page === 1) tquery = { q: $('tq').value, type: $('ttype').querySelector('.on').dataset.v };
   msg.className = 'msg'; msg.textContent = 'Searching...';
   try {
     const data = await api(`/api/admin/tmdb/search?q=${encodeURIComponent(tquery.q)}&type=${tquery.type}&page=${page}`);
@@ -106,6 +117,10 @@ $('ytfind').onclick = async () => {
   try {
     const d = await api('/api/admin/youtube-title?url=' + encodeURIComponent(url));
     ytLink = url;
+    if (/[?&]list=/.test(url)) { // a playlist is a series: search TMDB TV, not movies
+      const seg = $('ttype');
+      seg.querySelectorAll('button').forEach(b => { const on = b.dataset.v === 'series'; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
+    }
     $('tq').value = d.query;
     msg.textContent = `YouTube title: "${d.raw}"${d.channel ? ' (' + d.channel + ')' : ''}. Searching TMDB for "${d.query}"...`;
     await tmdbSearch(1);
@@ -126,7 +141,9 @@ async function loadQueue() {
       <p>${esc(c.description)}</p>
       <a class="yt" href="${esc(ytSearch(c))}" target="_blank" rel="noopener">1. Search YouTube for this &#8599;</a>
       <div class="inline">
-        <input class="q-url" placeholder="2. Paste the free YouTube link" value="${esc(c.youtubeUrl || '')}">
+        <input class="q-url" placeholder="2. Paste the free YouTube link${c.type === 'series' ? ' (playlist)' : ''}" value="${esc(c.youtubeUrl || '')}">
+      </div>
+      <div class="inline" style="margin-top:10px">${animeToggle('q-anime', c.isAnime)}
         <button class="btn primary q-ok">Approve &amp; publish</button>
         <button class="btn danger q-no">Reject</button>
       </div>
@@ -137,7 +154,7 @@ async function loadQueue() {
     el.querySelector('.q-ok').onclick = async () => {
       try {
         await api(`/api/admin/candidates/${id}/approve`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: el.querySelector('.q-url').value }) });
+          body: JSON.stringify({ url: el.querySelector('.q-url').value, isAnime: isOn(el.querySelector('.q-anime')) }) });
         loadQueue(); loadList();
       } catch (e) { msg.className = 'msg q-msg err'; msg.textContent = e.message; }
     };
@@ -158,13 +175,14 @@ $('add').onclick = async () => {
   const msg = $('add-msg');
   msg.className = 'msg'; msg.textContent = 'Adding...';
   const r = await post('/api/titles', {
-    url: $('url').value, type: 'movie',
+    url: $('url').value, type: $('atype').querySelector('.on').dataset.v, isAnime: $('anime').getAttribute('aria-pressed') === 'true',
     year: $('year').value, title: $('title').value, description: $('description').value
   });
   const data = await r.json();
   if (r.ok) {
     msg.className = 'msg ok'; msg.textContent = `Added "${data.title}"`;
     ['url', 'year', 'title', 'description'].forEach(id => $(id).value = '');
+    $('anime').setAttribute('aria-pressed', 'false');
     loadList();
   } else { msg.className = 'msg err'; msg.textContent = data.error; }
 };

@@ -1,6 +1,16 @@
 const $ = id => document.getElementById(id);
-let titles = [], filter = 'all', slide = 0, timer = null;
-let cat = new URLSearchParams(location.search).get('category') || '';
+let titles = [], slide = 0, timer = null;
+const params = () => new URLSearchParams(location.search);
+let cat = params().get('category') || '';
+let tab = params().get('tab') === 'anime' ? 'anime' : 'movies';
+// Home URL for a tab/category, e.g. /?tab=anime&category=Action
+const homeUrl = (c = '', t = tab) => {
+  const q = new URLSearchParams();
+  if (t === 'anime') q.set('tab', 'anime');
+  if (c) q.set('category', c);
+  return q.size ? '/?' + q : '/';
+};
+const inTab = t => tab === 'anime' ? !!t.isAnime : !t.isAnime;
 const SLIDE_MS = 6000;
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ESC[c]);
@@ -9,15 +19,19 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ESC[c]);
 const tmdbSize = (u, size) => u ? String(u).replace(/\/t\/p\/w\d+\//, `/t/p/${size}/`) : u;
 const posterOf = (t, size = 'w500') => tmdbSize(t.poster || t.thumbnail, size);
 const pageOf = t => `/movie/${encodeURIComponent(t.id)}`;
-const metaOf = t => [t.type === 'series' ? 'Series' : '', t.year, t.category].filter(Boolean).map(esc).join(' · ');
+// Anime sit under every genre they have (minus "Animation", which says nothing); everything else under its one category.
+const catsOf = t => {
+  if (!t.isAnime) return t.category ? [t.category] : [];
+  const g = ((t.genres || []).length ? t.genres : [t.category]).filter(x => x && x !== 'Animation');
+  return g.length ? g : ['Anime'];
+};
+const metaOf = t => [t.type === 'series' ? 'Series' : '', t.year, catsOf(t)[0]].filter(Boolean).map(esc).join(' · ');
 
+// Poster only (the title is in the alt text), like the Top 10 row.
 function tile(t, n) {
-  return `<a class="tile" href="${pageOf(t)}">
+  return `<a class="tile" href="${pageOf(t)}" aria-label="${esc(t.title)}">
     ${n ? `<span class="num">${n}</span>` : ''}
-    <div class="thumb">${t.type === 'series' ? '<span class="badge">SERIES</span>' : ''}
-    <img src="${esc(posterOf(t))}" alt="" loading="lazy"></div>
-    <div class="info show"><div class="t">${esc(t.title)}</div>
-    <div class="m">${[t.year, t.category].filter(Boolean).map(esc).join(' · ')}</div></div></a>`;
+    <div class="thumb"><img src="${esc(posterOf(t))}" alt="${esc(t.title)}" loading="lazy"></div></a>`;
 }
 
 function rail(inner) {
@@ -26,7 +40,7 @@ function rail(inner) {
 }
 
 // ---------- hero carousel (top 6) ----------
-const featuredList = () => titles.slice(0, 6);
+const featuredList = () => titles.filter(inTab).slice(0, 6);
 
 function showSlide(i) {
   const list = featuredList();
@@ -70,11 +84,17 @@ $('hero').onmouseleave = () => { paused = false; };
 // ---------- stats counters (count 0 → n once, when scrolled into view) ----------
 let statsDone = false;
 function runStats() {
-  const box = $('stats'), count = titles.filter(t => t.type !== 'series').length;
-  const movies = Math.max(5, Math.floor((count - 1) / 5) * 5); // 26-30 → 25+, 31-35 → 30+
-  box.hidden = !count;
-  if (statsDone || !count) return;
-  const targets = [[$('stat-movies'), movies]];
+  const box = $('stats');
+  const movieCount = titles.filter(t => t.type !== 'series' && !t.isAnime).length;
+  const animeCount = titles.filter(t => t.isAnime).length;
+  const round = n => Math.max(5, Math.floor((n - 1) / 5) * 5); // 26-30 → 25+, 31-35 → 30+
+  $('stat-movies-card').hidden = !movieCount;
+  $('stat-anime-card').hidden = !animeCount;
+  box.hidden = !movieCount && !animeCount;
+  if (statsDone || box.hidden) return;
+  const targets = [];
+  if (movieCount) targets.push([$('stat-movies'), round(movieCount)]);
+  if (animeCount) targets.push([$('stat-anime'), round(animeCount)]);
   const paint = (el, v) => { el.textContent = `${v}+`; };
   const go = () => {
     statsDone = true;
@@ -110,34 +130,37 @@ $('hero').addEventListener('touchend', e => {
 $('hero').addEventListener('touchcancel', () => { touch = null; paused = false; }, { passive: true });
 
 function render() {
-  const shown = titles.filter(t => filter === 'all' || t.type === filter);
+  const shown = titles.filter(inTab);
 
-  if (titles.length) {
+  if (shown.length) {
     $('hero').hidden = false;
-    if (!$('hero').children.length) { showSlide(0); restartTimer(); }
+    showSlide(0); restartTimer();
   } else $('hero').hidden = true;
 
   runStats();
-  document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('active', a.dataset.nav === filter));
+  document.querySelectorAll('[data-tab]').forEach(a => {
+    a.classList.toggle('active', a.dataset.tab === tab);
+    if (a.dataset.tab === tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
 
   if (!shown.length) {
-    $('rows').innerHTML = '<div class="empty">Nothing here yet. An admin can add titles from the Admin page.</div>';
+    $('rows').innerHTML = tab === 'anime' ? '<div class="empty">No anime yet. Check back soon.</div>' : '<div class="empty">Nothing here yet. An admin can add titles from the Admin page.</div>';
     return;
   }
-  const cats = [...new Set(shown.map(t => t.category))];
+  const cats = [...new Set(shown.flatMap(catsOf))];
   renderCats(cats);
   if (cat) {
-    const list = shown.filter(t => t.category === cat);
+    const list = shown.filter(t => catsOf(t).includes(cat));
     $('rows').innerHTML = list.length
-      ? `<div class="row-head cat-head"><h2>${esc(cat)}</h2><span>${list.length} title${list.length > 1 ? 's' : ''}<a class="cat-clear" data-cat="" href="/">&times; Clear</a></span></div><div class="cgrid">${list.map(t => tile(t)).join('')}</div>`
-      : `<div class="empty">No titles in “${esc(cat)}” yet. <a href="/" data-cat="" style="color:var(--red)">Browse all</a></div>`;
+      ? `<div class="row-head cat-head"><h2>${esc(cat)}</h2><span>${list.length} title${list.length > 1 ? 's' : ''}<a class="cat-clear" data-cat="" href="${homeUrl()}">&times; Clear</a></span></div><div class="cgrid">${list.map(t => tile(t)).join('')}</div>`
+      : `<div class="empty">No titles in “${esc(cat)}” yet. <a href="${homeUrl()}" data-cat="" style="color:var(--red)">Browse all</a></div>`;
     return;
   }
   const top = shown.length >= 4
     ? `<div class="row top"><div class="row-head"><h2>Top 10</h2></div>${rail(shown.slice(0, 10).map((t, i) => tile(t, i + 1)).join(''))}</div>` : '';
   $('rows').innerHTML = top + cats.map(c => {
-    const list = shown.filter(t => t.category === c);
-    return `<div class="row"><div class="row-head"><h2><a data-cat="${esc(c)}" href="/?category=${encodeURIComponent(c)}">${esc(c)}</a></h2><span><a data-cat="${esc(c)}" href="/?category=${encodeURIComponent(c)}">See all ${list.length}</a></span></div>${rail(list.map(t => tile(t)).join(''))}</div>`;
+    const list = shown.filter(t => catsOf(t).includes(c));
+    return `<div class="row"><div class="row-head"><h2><a data-cat="${esc(c)}" href="${homeUrl(c)}">${esc(c)}</a></h2><span><a data-cat="${esc(c)}" href="${homeUrl(c)}">See all ${list.length}</a></span></div>${rail(list.map(t => tile(t)).join(''))}</div>`;
   }).join('');
   wireRails();
 }
@@ -145,16 +168,16 @@ function render() {
 // ---------- category bar ----------
 function renderCats(cats) {
   document.body.classList.toggle('browsing', !!cat);
-  document.title = cat ? `${cat} - YOUFLIX` : 'YOUFLIX';
-  const chip = (name, label, n) => `<a class="chip ${name === cat ? 'active' : ''}" data-cat="${esc(name)}" href="${name ? '/?category=' + encodeURIComponent(name) : '/'}"${name === cat ? ' aria-current="true"' : ''}>${esc(label)}${n != null ? ` <small>${n}</small>` : ''}</a>`;
-  $('cats').innerHTML = chip('', 'All') + cats.map(c => chip(c, c, titles.filter(t => t.category === c).length)).join('');
+  document.title = cat ? `${cat} - YOUFLIX` : tab === 'anime' ? 'Anime - YOUFLIX' : 'YOUFLIX';
+  const chip = (name, label, n) => `<a class="chip ${name === cat ? 'active' : ''}" data-cat="${esc(name)}" href="${homeUrl(name)}"${name === cat ? ' aria-current="true"' : ''}>${esc(label)}${n != null ? ` <small>${n}</small>` : ''}</a>`;
+  $('cats').innerHTML = chip('', 'All') + cats.map(c => chip(c, c, titles.filter(t => inTab(t) && catsOf(t).includes(c)).length)).join('');
   const on = $('cats').querySelector('.active');
   if (on) $('cats').scrollTo({ left: on.offsetLeft - 24, behavior: 'smooth' });
 }
 
 function setCat(c, push = true) {
   cat = c;
-  if (push) history.pushState({}, '', c ? '/?category=' + encodeURIComponent(c) : '/');
+  if (push) history.pushState({}, '', homeUrl(c));
   render();
   scrollTo(0, 0);
 }
@@ -164,7 +187,7 @@ document.addEventListener('click', e => {
   e.preventDefault();
   setCat(a.dataset.cat);
 });
-addEventListener('popstate', () => { cat = new URLSearchParams(location.search).get('category') || ''; render(); });
+addEventListener('popstate', () => { cat = params().get('category') || ''; tab = params().get('tab') === 'anime' ? 'anime' : 'movies'; render(); });
 
 function wireRails() {
   document.querySelectorAll('.rail-wrap').forEach(w => {
@@ -180,6 +203,13 @@ function wireRails() {
   });
 }
 
-document.querySelectorAll('[data-nav]').forEach(a => a.onclick = e => { e.preventDefault(); filter = a.dataset.nav; render(); });
+document.querySelectorAll('[data-tab]').forEach(a => a.onclick = e => {
+  if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+  e.preventDefault();
+  tab = a.dataset.tab; cat = '';
+  history.pushState({}, '', homeUrl());
+  render();
+  scrollTo(0, 0);
+});
 
 fetch('/api/titles').then(r => r.json()).then(d => { titles = d; render(); });

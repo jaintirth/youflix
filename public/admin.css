@@ -90,3 +90,22 @@ textarea{resize:vertical;min-height:90px}
   .q{flex-direction:column}.q img{width:70px}.toolbar{flex-wrap:wrap}.toolbar input{max-width:none}
   .inline{flex-direction:column}
 }
+
+/* segmented control + toggle (buttons, so the global input styles don't apply) */
+.seg{display:inline-flex;gap:4px;padding:4px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;max-width:100%}
+.seg button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:600;font-size:14px;padding:8px 18px;border-radius:9px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.25}
+.seg button small{font-weight:400;font-size:11px;opacity:.75}
+.seg button.on{background:var(--accent);color:#fff}
+.tog{display:flex;align-items:center;gap:12px;margin-top:14px;padding:10px 14px;width:100%;max-width:420px;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:12px;color:var(--text);font:inherit;cursor:pointer}
+.tog .knob{flex:none;width:40px;height:22px;border-radius:99px;background:#3a3a4a;position:relative;transition:background .15s}
+.tog .knob::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s}
+.tog[aria-pressed="true"]{border-color:var(--accent)}
+.tog[aria-pressed="true"] .knob{background:var(--accent)}
+.tog[aria-pressed="true"] .knob::after{transform:translateX(18px)}
+.tog .txt{display:flex;flex-direction:column;line-height:1.3}
+.tog .txt small{color:var(--muted);font-size:12px}
+.tog.sm{margin:12px 0 0;padding:6px 12px;width:auto}
+.tog.sm .txt b{font-size:13.5px}
+.q .tog.sm{margin:0 0 12px}
+.inline .seg{flex:none}.inline .seg button{padding:8px 14px}
+@media (max-width:640px){.inline .seg{align-self:flex-start}}
