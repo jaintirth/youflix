@@ -119,6 +119,7 @@ async function refreshPopularity() {
 
 // Publishes a title. `base` carries optional TMDB metadata that takes precedence over YouTube's.
 async function publish(base, url) {
+  if (!String(url || '').trim()) return { status: 400, error: 'Paste the free YouTube link first' };
   const yt = parseYouTube(String(url || ''));
   if (!yt) return { status: 400, error: 'Not a valid YouTube video or playlist URL' };
 
@@ -133,12 +134,17 @@ async function publish(base, url) {
   const ytThumb = yt.kind === 'video'
     ? `https://i.ytimg.com/vi/${yt.id}/hqdefault.jpg`
     : (meta && meta.thumbnail_url) || null;
+  const name = (base.title || (meta && meta.title) || '').trim();
+  const genres = await inferGenres({ type: base.type, tmdbId: base.tmdbId, title: name, year: base.year }) || [];
+  const isAnime = base.isAnime === true || base.isAnime === 'true';
   const item = {
     id: crypto.randomUUID(),
-    type: 'movie', // series are not supported yet
+    type: base.type === 'series' ? 'series' : 'movie',
+    isAnime,
     title: (base.title || meta.title).trim(),
     description: (base.description || '').trim(),
-    category: ((base.category || await inferCategory({ type: base.type, tmdbId: base.tmdbId, title: (base.title || (meta && meta.title) || '').trim(), year: base.year })) || 'General').trim(),
+    category: (base.category || (isAnime ? animeCategory(genres) : null) || genres[0] || 'General').trim(),
+    genres,
     year: base.year ? Number(base.year) || null : null,
     kind: yt.kind,
     youtubeId: yt.id,
@@ -193,8 +199,9 @@ async function genreNames(kind) {
   }
   return genreCache[kind];
 }
-// Works from a TMDB id when known, otherwise finds the title on TMDB first. Returns null when TMDB can't say.
-async function inferCategory({ type, tmdbId, title, year }) {
+// All of a title's TMDB genres (e.g. ["Animation", "Action", "Comedy"]). Works from a TMDB id when known,
+// otherwise finds the title on TMDB first. Returns null when TMDB can't say.
+async function inferGenres({ type, tmdbId, title, year }) {
   if (!TMDB_KEY && !TMDB_TOKEN) return null;
   try {
     const kind = type === 'series' ? 'tv' : 'movie';
@@ -205,9 +212,15 @@ async function inferCategory({ type, tmdbId, title, year }) {
     }
     if (!id) return null;
     const d = await tmdb(`/${kind}/${id}`);
-    return (d.genres && d.genres[0] && d.genres[0].name) || null;
+    return d.genres && d.genres.length ? d.genres.map(g => g.name) : null;
   } catch { return null; }
 }
+async function inferCategory(t) {
+  const g = await inferGenres(t);
+  return (g && g[0]) || null;
+}
+// "Animation" says nothing about an anime, so its category is the first real genre.
+const animeCategory = genres => (genres || []).find(g => g !== 'Animation') || null;
 
 function fromTmdb(x, type) {
   const date = x.release_date || x.first_air_date || '';
@@ -218,7 +231,9 @@ function fromTmdb(x, type) {
     year: date ? Number(date.slice(0, 4)) : null,
     description: x.overview || '',
     poster: tmdbImg(x.poster_path, 'w342'),
-    backdrop: tmdbImg(x.backdrop_path, 'w780')
+    backdrop: tmdbImg(x.backdrop_path, 'w780'),
+    // TMDB has no anime flag: Japanese-language animation is the closest match. Admin can override.
+    isAnime: (x.genre_ids || []).includes(16) && x.original_language === 'ja'
   };
 }
 
@@ -257,12 +272,17 @@ app.get('/api/admin/youtube-title', requireAdmin, async (req, res) => {
 app.get('/api/admin/candidates', requireAdmin, (req, res) => res.json(loadCands()));
 
 app.post('/api/admin/candidates', requireAdmin, (req, res) => {
-  const { tmdbId, type, title, year, description, poster, backdrop, youtubeUrl, category } = req.body;
+  const { tmdbId, type, title, year, description, poster, backdrop, youtubeUrl, category, isAnime } = req.body;
   if (!tmdbId || !title) return res.status(400).json({ error: 'Missing TMDB data' });
   const cands = loadCands();
-  if (cands.some(c => c.tmdbId === tmdbId && c.type === type)) return res.status(409).json({ error: 'Already shortlisted' });
+  const dup = cands.find(c => c.tmdbId === tmdbId && c.type === type);
+  if (dup) {
+    // Re-shortlisting from a YouTube link: keep the candidate but attach the link it was missing.
+    if (youtubeUrl && !dup.youtubeUrl) { dup.youtubeUrl = youtubeUrl; saveCands(cands); return res.json(dup); }
+    return res.status(409).json({ error: 'Already shortlisted' });
+  }
   if (loadTitles().some(t => t.tmdbId === tmdbId && t.type === type)) return res.status(409).json({ error: 'Already in the catalogue' });
-  const cand = { id: crypto.randomUUID(), tmdbId, type: type === 'series' ? 'series' : 'movie', title, year, description, poster, backdrop, category: category || null, youtubeUrl: youtubeUrl || null };
+  const cand = { id: crypto.randomUUID(), tmdbId, type: type === 'series' ? 'series' : 'movie', title, year, description, poster, backdrop, category: category || null, isAnime: isAnime === true, youtubeUrl: youtubeUrl || null };
   cands.unshift(cand);
   saveCands(cands);
   res.status(201).json(cand);
@@ -273,7 +293,7 @@ app.post('/api/admin/candidates/:id/approve', requireAdmin, async (req, res) => 
   const cands = loadCands();
   const cand = cands.find(c => c.id === req.params.id);
   if (!cand) return res.status(404).json({ error: 'Not found' });
-  const r = await publish(cand, req.body.url);
+  const r = await publish({ ...cand, ...(typeof req.body.isAnime === 'boolean' ? { isAnime: req.body.isAnime } : {}) }, req.body.url);
   if (r.item) saveCands(cands.filter(c => c.id !== cand.id));
   res.status(r.status).json(r.item || { error: r.error });
 });
@@ -290,7 +310,8 @@ app.patch('/api/titles/:id', requireAdmin, async (req, res) => {
   const titles = loadTitles();
   const t = titles.find(x => x.id === req.params.id);
   if (!t) return res.status(404).json({ error: 'Not found' });
-  const { youtubeUrl, trailerUrl } = req.body;
+  const { youtubeUrl, trailerUrl, isAnime } = req.body;
+  if (isAnime !== undefined) t.isAnime = isAnime === true;
 
   if (youtubeUrl !== undefined) {
     const yt = parseYouTube(String(youtubeUrl));
@@ -386,6 +407,14 @@ setInterval(refreshPopularity, 24 * 60 * 60 * 1000); // TMDB recalculates popula
   for (const t of titles.filter(x => !x.category || x.category === 'General')) {
     const c = await inferCategory(t);
     if (c) { t.category = c; changed++; }
+  }
+  // Anime get every TMDB genre (so One-Punch Man shows under both Action and Comedy) and a real category instead of "Animation".
+  for (const t of titles.filter(x => x.isAnime && !x.genres)) {
+    const g = await inferGenres(t);
+    if (!g) continue;
+    t.genres = g;
+    if (!t.category || t.category === 'General' || t.category === 'Animation') t.category = animeCategory(g) || t.category;
+    changed++;
   }
   if (changed) { saveTitles(titles); console.log(`Categorised ${changed} existing title(s) from TMDB`); }
 })();

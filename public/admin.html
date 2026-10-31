@@ -48,6 +48,12 @@
         <p class="sub">Only add content its owner has made free to watch on YouTube. Paste the video link; title and artwork are fetched automatically.</p>
         <label for="url">YouTube link</label>
         <input id="url" placeholder="https://www.youtube.com/watch?v=...">
+        <label>Format</label>
+        <div class="seg" id="atype" role="group" aria-label="Format">
+          <button type="button" class="on" data-v="movie" aria-pressed="true">Movie<small>video link</small></button>
+          <button type="button" data-v="series" aria-pressed="false">Series<small>playlist link</small></button>
+        </div>
+        <button type="button" class="tog" id="anime" aria-pressed="false"><span class="knob"></span><span class="txt"><b>Anime</b><small>Show in the Anime tab instead of Movies</small></span></button>
         <div class="grid2">
           <div><label for="year">Year (optional)</label><input id="year" type="number" min="1890" max="2100" placeholder="2019"></div>
           <div><label for="title">Title override (optional)</label><input id="title" placeholder="Defaults to YouTube title"></div>
@@ -68,7 +74,7 @@
         <div class="inline"><input id="yturl" placeholder="Paste the free YouTube link; we read its title and search TMDB"><button class="btn primary" id="ytfind">Find on TMDB</button></div>
         <div class="msg" id="yt-msg"></div>
         <label for="tq">Or search by title</label>
-        <div class="inline"><input id="tq" placeholder="Search a title..."><select id="ttype" hidden><option value="movie">Movie</option></select><button class="btn" id="tsearch">Search</button></div>
+        <div class="inline"><input id="tq" placeholder="Search a title..."><div class="seg" id="ttype" role="group" aria-label="Search in"><button type="button" class="on" data-v="movie" aria-pressed="true">Movies</button><button type="button" data-v="series" aria-pressed="false">Series / anime</button></div><button class="btn" id="tsearch">Search</button></div>
         <div class="msg" id="t-msg"></div>
         <div class="results" id="tresults"></div>
         <div class="pager" id="tpager" hidden>

@@ -11,6 +11,7 @@
 <body class="home">
 <header>
   <a class="logo" href="/"><img class="on-dark" src="/brand/youflix-horizontal-dark.svg" alt="YouFlix"><img class="on-light" src="/brand/youflix-horizontal-light.svg" alt=""></a>
+  <nav class="tabs" aria-label="Sections"><a class="tab-link active" data-tab="movies" href="/">Movies</a><a class="tab-link" data-tab="anime" href="/?tab=anime">Anime</a></nav>
 </header>
 <section class="hero" id="hero" hidden></section>
 <main>
@@ -20,9 +21,13 @@
     <div><h3>Watch free. No sign-up.</h3><p>Every title is published for free on YouTube by its owner.</p></div>
   </div>
   <section class="stats" id="stats" aria-label="YouFlix statistics" hidden>
-    <div class="stat-card">
+    <div class="stat-card" id="stat-movies-card">
       <div class="stat-num" id="stat-movies">0+</div>
       <div class="stat-label">Movies Available</div>
+    </div>
+    <div class="stat-card" id="stat-anime-card" hidden>
+      <div class="stat-num" id="stat-anime">0+</div>
+      <div class="stat-label">Animes</div>
     </div>
   </section>
 </main>

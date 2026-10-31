@@ -309,3 +309,10 @@ body.browsing .cat-head { padding-top:14px; }
   .cat-clear { display:inline-block; margin-left:14px; padding:6px 10px; border-radius:99px; background:rgba(255,255,255,.1); color:var(--text) !important; }
   .sx-label { padding-left:0; } .sx-cats { padding-left:0; padding-right:0; }
 }
+
+/* Movies / Anime tabs */
+.tabs { display:flex; gap:22px; align-items:center; }
+.tab-link { color:var(--muted); text-decoration:none; font-weight:600; font-size:.95rem; padding:6px 0; border-bottom:2px solid transparent; }
+.tab-link:hover { color:var(--text); }
+.tab-link.active { color:var(--text); border-bottom-color:var(--red); }
+@media (max-width:640px) { header { gap:16px; } .tabs { gap:16px; } }
