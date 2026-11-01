@@ -1,5 +1,342 @@
 [
   {
+    "id": "b75b13a2-c743-40ed-9324-8a407bca3962",
+    "type": "movie",
+    "isAnime": false,
+    "title": "Amar Akbar Anthony",
+    "description": "Three brothers, each raised in different religious households, reunite after many years in a chance encounter. They set out to take revenge on those responsible for separating them.",
+    "category": "Action",
+    "genres": [
+      "Action",
+      "Comedy",
+      "Drama",
+      "Music",
+      "Crime"
+    ],
+    "year": 1977,
+    "kind": "video",
+    "youtubeId": "LOcuhuUe_XY",
+    "youtubeUrl": "https://youtu.be/LOcuhuUe_XY",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/j5HwSEW5j2Vj0NrCHa4992LpxdH.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/lMJ3UBvck9bCesdIZpcv3CMkCcw.jpg",
+    "tmdbId": 38022,
+    "channel": "Shemaroo Movies",
+    "addedAt": "2026-11-01T16:52:40.688Z",
+    "popularity": 1.07
+  },
+  {
+    "id": "456fb188-2e94-4f76-98fe-ed0e159be7b0",
+    "type": "movie",
+    "isAnime": false,
+    "title": "Besharam",
+    "description": "Babli is a street smart car mechanic living in a Delhi orphanage. He is charming and lives life to the fullest. He also steals cars to support his orphanage. He has no sense of right or wrong till he unwittingly hurts the love of his life, Tara. Babli realizes that there is no right way of doing the wrong thing. Babli sets out to fix all the wrongs in his life and he continues to be shameless about it.",
+    "category": "Action",
+    "genres": [
+      "Action",
+      "Comedy"
+    ],
+    "year": 2013,
+    "kind": "video",
+    "youtubeId": "tVXxjDTMqeQ",
+    "youtubeUrl": "https://youtu.be/tVXxjDTMqeQ",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/7G8rizluKUAZtNm5mharE8FiTcC.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/79xt4XA6FBY9c9gBzEKrpKQ5Mz6.jpg",
+    "tmdbId": 218779,
+    "channel": "Shemaroo Movies",
+    "addedAt": "2026-11-01T16:52:39.258Z",
+    "popularity": 2.38
+  },
+  {
+    "id": "a5854dda-2988-4eb7-9b17-0340823f6f3e",
+    "type": "movie",
+    "isAnime": false,
+    "title": "Sanam Teri Kasam",
+    "description": "Tough ex-convict Inder and traditional mousy Saraswati fall in love and get married, but a tragedy changes their lives forever. The film is a modern rendition of the legends of Shiva-Sati and the novel \"Love Story\" by Eric Segal.",
+    "category": "Drama",
+    "genres": [
+      "Drama",
+      "Romance"
+    ],
+    "year": 2016,
+    "kind": "video",
+    "youtubeId": "Kcsf6GC3leI",
+    "youtubeUrl": "https://youtu.be/Kcsf6GC3leI",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/4qifcARBYMzaKgIeaPNTYXLikXd.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/xb9T5kMSq4pp9CDUgO5oQAy6p4q.jpg",
+    "tmdbId": 381418,
+    "channel": "Shemaroo Movies",
+    "addedAt": "2026-11-01T16:52:37.514Z",
+    "popularity": 1.86
+  },
+  {
+    "id": "00b9a9d3-b698-48ba-8d62-0c35b61305b6",
+    "type": "movie",
+    "isAnime": false,
+    "title": "The Legend of Bhagat Singh",
+    "description": "Born in British India, Bhagat Singh witnesses numerous atrocities during his childhood and grows up to become one of the most fearless freedom fighters in the country.",
+    "category": "Crime",
+    "genres": [
+      "Crime",
+      "Drama",
+      "History"
+    ],
+    "year": 2002,
+    "kind": "video",
+    "youtubeId": "SW-QaXiM6SU",
+    "youtubeUrl": "https://youtu.be/SW-QaXiM6SU",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/pJ3m234HaUOCRlcOSM9BhfNKrEd.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/pOd8woHbZUDn9HheKTkSQHFNTZ2.jpg",
+    "tmdbId": 31525,
+    "channel": "Shemaroo Movies",
+    "addedAt": "2026-11-01T16:52:36.109Z",
+    "popularity": 1.47
+  },
+  {
+    "id": "2649020d-f879-4a4b-bf02-fd1d5e5d66f8",
+    "type": "movie",
+    "isAnime": false,
+    "title": "Tum Bin 2",
+    "description": "The film centers around the life of Taran, who loses her fiance Amar in a skiing accident. Her life changes when she meets Shekhar, who has seen the best and worst of times. The story explores old friendship, newfound love and a difficult decision.",
+    "category": "Drama",
+    "genres": [
+      "Drama",
+      "Romance"
+    ],
+    "year": 2016,
+    "kind": "video",
+    "youtubeId": "pDDwgvoJYRs",
+    "youtubeUrl": "https://youtu.be/pDDwgvoJYRs",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/kbI56RGOZsjSni36GDJdClMV77.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/ApJyLoGxBffPwiWYe7qeLLUjObb.jpg",
+    "tmdbId": 426785,
+    "channel": "T-Series",
+    "addedAt": "2026-11-01T16:47:22.579Z",
+    "popularity": 1.05
+  },
+  {
+    "id": "aa95f508-ff66-4e05-8bcd-146b54e65136",
+    "type": "movie",
+    "isAnime": false,
+    "title": "Humko Deewana Kar Gaye",
+    "description": "Aditya, an engineer, travels to Canada for training. There he meets Jia, a beautiful woman from an influential family. Fate keeps pushing the pair together, and even though both are already betrothed to others, Adi and Jia fall in love.",
+    "category": "Romance",
+    "genres": [
+      "Romance",
+      "Drama"
+    ],
+    "year": 2006,
+    "kind": "video",
+    "youtubeId": "5csgxuSFn2E",
+    "youtubeUrl": "https://youtu.be/5csgxuSFn2E",
+    "thumbnail": "https://image.tmdb.org/t/p/w342/5Pe8sACQOQ6Ht6mPR5tUNwpGHgy.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/5Pe8sACQOQ6Ht6mPR5tUNwpGHgy.jpg",
+    "tmdbId": 48569,
+    "channel": "T-Series",
+    "addedAt": "2026-11-01T16:47:21.021Z",
+    "popularity": 1.66
+  },
+  {
+    "id": "1a097330-a0f2-4a9c-a1e7-5a44e2d77dcf",
+    "type": "movie",
+    "isAnime": false,
+    "title": "All Is Well",
+    "description": "A road trip, undertaken by Rishi Kapoor and Abhishek Bachchan, is later joined by their mother.",
+    "category": "Romance",
+    "genres": [
+      "Romance",
+      "Comedy",
+      "Drama"
+    ],
+    "year": 2015,
+    "kind": "video",
+    "youtubeId": "hfpIfkbokNY",
+    "youtubeUrl": "https://youtu.be/hfpIfkbokNY",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/8ExGNeA74E5b9yT9yLJD2ET1mym.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/hsruH6BJCDy5ELSB7u9oZKryf2M.jpg",
+    "tmdbId": 355279,
+    "channel": "T-Series",
+    "addedAt": "2026-11-01T16:47:19.958Z",
+    "popularity": 1.14
+  },
+  {
+    "id": "a52faf11-ae90-46e8-8891-08f9ffb3d921",
+    "type": "movie",
+    "isAnime": false,
+    "title": "Ki & Ka",
+    "description": "An unconventional woman, gains immense success in her professional life but things take a turn when she meets a guy, who wants to be a house husband.",
+    "category": "Comedy",
+    "genres": [
+      "Comedy",
+      "Romance"
+    ],
+    "year": 2016,
+    "kind": "video",
+    "youtubeId": "i850KfNqI3k",
+    "youtubeUrl": "https://youtu.be/i850KfNqI3k",
+    "thumbnail": "https://image.tmdb.org/t/p/w342/h0EdMN91ts85jN62UotOOUXa5Ho.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/h0EdMN91ts85jN62UotOOUXa5Ho.jpg",
+    "tmdbId": 390437,
+    "channel": "Eros Universe Showtime",
+    "addedAt": "2026-11-01T16:47:18.765Z",
+    "popularity": 1.44
+  },
+  {
+    "id": "55be0de9-5916-46e1-95f5-129f42553bd0",
+    "type": "movie",
+    "isAnime": false,
+    "title": "Tevar",
+    "description": "A Kabaddi player rescues a young woman from an unwanted marriage and hides her in his home.",
+    "category": "Thriller",
+    "genres": [
+      "Thriller",
+      "Action",
+      "Drama"
+    ],
+    "year": 2015,
+    "kind": "video",
+    "youtubeId": "aMvXAqU3L-s",
+    "youtubeUrl": "https://youtu.be/aMvXAqU3L-s",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/dyacWrj0YmOJvZ5vKB2n4ysEL0e.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/gcFHdnmAAwx4kzg6DkNn5lLGDeP.jpg",
+    "tmdbId": 312809,
+    "channel": "Eros Universe Showtime",
+    "addedAt": "2026-11-01T16:47:17.568Z",
+    "popularity": 1.16
+  },
+  {
+    "id": "0e3c90e6-8c72-46c6-87aa-ec8755019769",
+    "type": "movie",
+    "isAnime": false,
+    "title": "No Smoking",
+    "description": "A heavily addicted smoker is unprepared for the true price he must pay when he asks a guru's help to kick the habit.",
+    "category": "Thriller",
+    "genres": [
+      "Thriller",
+      "Drama"
+    ],
+    "year": 2007,
+    "kind": "video",
+    "youtubeId": "nfmnR_mG_cI",
+    "youtubeUrl": "https://youtu.be/nfmnR_mG_cI",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/q64vjfQkPPVGj5OvosJvswMhpqM.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/reJRahEjVlMpbolmrRZRyKOcy3m.jpg",
+    "tmdbId": 36204,
+    "channel": "Eros Universe Showtime",
+    "addedAt": "2026-11-01T16:47:16.268Z",
+    "popularity": 1.2
+  },
+  {
+    "id": "3c8e0030-f2d1-4508-9526-02c2a46ef3c3",
+    "type": "movie",
+    "isAnime": false,
+    "title": "Munna Michael",
+    "description": "An expert dancer Munna who idolizes the king of pop, reluctantly tutors a gangster until their developing bond gets disrupted by their common romantic interest towards the same woman.",
+    "category": "Music",
+    "genres": [
+      "Music",
+      "Action"
+    ],
+    "year": 2017,
+    "kind": "video",
+    "youtubeId": "4VvX5NwGs00",
+    "youtubeUrl": "https://youtu.be/4VvX5NwGs00",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/omAcS3PpAhvrG10tE9qTLlw8qyh.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/p1tdHXmGGLc8o8kTImZi5iPXcu3.jpg",
+    "tmdbId": 460508,
+    "channel": "Eros Universe Showtime",
+    "addedAt": "2026-11-01T16:47:15.046Z",
+    "popularity": 1.4
+  },
+  {
+    "id": "f4d1bdfb-cb89-44f2-a2a4-f5ed821bf216",
+    "type": "movie",
+    "isAnime": false,
+    "title": "1921",
+    "description": "When Ayush arrives in England to learn music, he is shocked and scared when the manor he is living in becomes haunted by spirits. To exorcise them, he seeks the help of Rose, a woman who can see and speak with them.",
+    "category": "Thriller",
+    "genres": [
+      "Thriller",
+      "Horror"
+    ],
+    "year": 2018,
+    "kind": "video",
+    "youtubeId": "4c3J3uDXpqQ",
+    "youtubeUrl": "https://youtu.be/4c3J3uDXpqQ",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/zmTirQ6xMLihMRnnOiYdzhabpI0.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/lEOwlojOgtbfdFrMANVwVohOqyY.jpg",
+    "tmdbId": 492181,
+    "channel": "Shemaroo Movies",
+    "addedAt": "2026-11-01T16:47:13.853Z",
+    "popularity": 1.51
+  },
+  {
+    "id": "666abb7a-d3e2-4d72-8f2e-333e8dac6f80",
+    "type": "movie",
+    "isAnime": false,
+    "title": "Black Friday",
+    "description": "Bombs tear through Bombay in 1993, wreaking havoc and polarising the citizens. With perpetrators at large, the state launches a massive man-hunt to unmask the perpetrators behind these events.",
+    "category": "Crime",
+    "genres": [
+      "Crime",
+      "Drama"
+    ],
+    "year": 2004,
+    "kind": "video",
+    "youtubeId": "b7JUL7eWw3k",
+    "youtubeUrl": "https://youtu.be/b7JUL7eWw3k",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/2BCAKAno5MjKXAhLyo0Bc1XSF6h.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/jzqsxRSmaYBwbXVMvqQ54fOljTD.jpg",
+    "tmdbId": 28740,
+    "channel": "Shemaroo Movies",
+    "addedAt": "2026-11-01T16:47:12.653Z",
+    "popularity": 1.2
+  },
+  {
+    "id": "a1c3ea87-a7a9-4341-bbab-8a45ffea40c6",
+    "type": "movie",
+    "isAnime": false,
+    "title": "Bhagam Bhag",
+    "description": "After their lead actress quits their drama troupe; Bunty, Babla and their boss Champak search for a new heroine in London where they have just arrived, and get embroiled in a murder case involving a mysterious woman.",
+    "category": "Comedy",
+    "genres": [
+      "Comedy",
+      "Thriller",
+      "Romance"
+    ],
+    "year": 2006,
+    "kind": "video",
+    "youtubeId": "o5u38-Rx_e4",
+    "youtubeUrl": "https://youtu.be/o5u38-Rx_e4",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/73DMYsmzV0MbdVn4CIVITw7keDX.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/wJqdwEgMiMzU0zIEnKBWEbTfeUS.jpg",
+    "tmdbId": 41188,
+    "channel": "Shemaroo Movies",
+    "addedAt": "2026-11-01T16:47:11.297Z",
+    "popularity": 1.32
+  },
+  {
+    "id": "7c7ce544-c9b2-455b-8a02-24320db1692c",
+    "type": "movie",
+    "isAnime": false,
+    "title": "Khatta Meetha",
+    "description": "Sachin Tichkule, a struggling contractor whose failure in making peace with the corrupt bureaucracy in town as well as strained relation with his ex-girlfriend and his family leads to misadventures that deprive him of his closest relations. However, as he begins to mend his ways, justice comes knocking on his door.",
+    "category": "Comedy",
+    "genres": [
+      "Comedy",
+      "Drama"
+    ],
+    "year": 2010,
+    "kind": "video",
+    "youtubeId": "v5ZFfv9ZacA",
+    "youtubeUrl": "https://youtu.be/v5ZFfv9ZacA",
+    "thumbnail": "https://image.tmdb.org/t/p/w780/kknvBnQvMSUBelOKHmMlb4zgGZg.jpg",
+    "poster": "https://image.tmdb.org/t/p/w342/rIM83O7WUcZIlg9pd6SgXgB0w2v.jpg",
+    "tmdbId": 44565,
+    "channel": "Shemaroo Movies",
+    "addedAt": "2026-11-01T16:47:09.903Z",
+    "popularity": 1.21
+  },
+  {
     "id": "2f61f90f-0589-4771-9b49-74b0b7940c95",
     "type": "series",
     "isAnime": true,
@@ -21,7 +358,7 @@
     "tmdbId": 72636,
     "channel": "Muse India",
     "addedAt": "2026-10-31T08:10:36.628Z",
-    "popularity": 3.51
+    "popularity": 3.25
   },
   {
     "id": "ffbe584f-9408-4c32-a69a-2865b7eceebd",
@@ -45,7 +382,7 @@
     "tmdbId": 240411,
     "channel": "Muse Asia",
     "addedAt": "2026-10-31T08:10:34.835Z",
-    "popularity": 0.78
+    "popularity": 0.63
   },
   {
     "id": "f1dba067-a525-4b5f-904d-dd8b8246859b",
@@ -69,7 +406,7 @@
     "tmdbId": 46261,
     "channel": "Muse Asia",
     "addedAt": "2026-10-31T08:10:32.864Z",
-    "popularity": 4.38
+    "popularity": 4.15
   },
   {
     "id": "6da8e841-f8e7-47b0-b479-700dd5e7b12b",
@@ -116,7 +453,7 @@
     "tmdbId": 67075,
     "channel": "Muse Asia",
     "addedAt": "2026-10-31T08:10:28.944Z",
-    "popularity": 1.56
+    "popularity": 1.42
   },
   {
     "id": "445b3425-60bb-473e-a916-87292ddf444b",
@@ -139,7 +476,7 @@
     "tmdbId": 45790,
     "channel": "Matias",
     "addedAt": "2026-10-31T08:10:26.997Z",
-    "popularity": 1.14
+    "popularity": 1.17
   },
   {
     "id": "efd6daf6-b64e-44c0-9a52-17ccdd68bd0d",
@@ -157,7 +494,7 @@
     "tmdbId": 62110,
     "channel": "Muse Asia",
     "addedAt": "2026-10-31T07:31:13.921Z",
-    "popularity": 0.84,
+    "popularity": 0.83,
     "genres": [
       "Animation",
       "Comedy",
@@ -181,7 +518,7 @@
     "tmdbId": 1429,
     "channel": "Muse Asia",
     "addedAt": "2026-10-31T07:31:12.281Z",
-    "popularity": 5.67,
+    "popularity": 5.28,
     "genres": [
       "Animation",
       "Sci-Fi & Fantasy",
@@ -204,7 +541,7 @@
     "tmdbId": 82684,
     "channel": "Muse Asia",
     "addedAt": "2026-10-31T07:31:10.511Z",
-    "popularity": 2.89,
+    "popularity": 2.74,
     "genres": [
       "Action & Adventure",
       "Animation",
@@ -228,7 +565,7 @@
     "tmdbId": 94664,
     "channel": "Muse Asia",
     "addedAt": "2026-10-31T07:31:08.593Z",
-    "popularity": 1.38,
+    "popularity": 1.21,
     "genres": [
       "Action & Adventure",
       "Animation",
@@ -251,7 +588,7 @@
     "tmdbId": 46298,
     "channel": "Muse Asia",
     "addedAt": "2026-10-31T07:31:06.957Z",
-    "popularity": 0.69,
+    "popularity": 0.7,
     "genres": [
       "Animation",
       "Action & Adventure",
@@ -296,7 +633,7 @@
     "tmdbId": 62104,
     "channel": "Muse Asia",
     "addedAt": "2026-10-31T07:26:06.638Z",
-    "popularity": 0.43,
+    "popularity": 0.46,
     "genres": [
       "Animation",
       "Action & Adventure",
@@ -319,7 +656,7 @@
     "tmdbId": 63926,
     "channel": "Muse Asia",
     "addedAt": "2026-10-31T07:14:28.595Z",
-    "popularity": 2.37,
+    "popularity": 2,
     "genres": [
       "Animation",
       "Comedy",
@@ -342,7 +679,7 @@
     "tmdbId": 272420,
     "channel": "Shemaroo Movies",
     "addedAt": "2026-10-31T04:56:11.185Z",
-    "popularity": 1.04
+    "popularity": 1.15
   },
   {
     "id": "ee3eab84-6dd6-45aa-bb56-c256fa7355f8",
@@ -359,7 +696,7 @@
     "tmdbId": 53569,
     "channel": "Star Studios Classics",
     "addedAt": "2026-10-31T04:52:54.268Z",
-    "popularity": 1.73
+    "popularity": 1.51
   },
   {
     "id": "c727df30-0ff4-4f68-8ea9-ee476ccfd5c6",
@@ -376,7 +713,7 @@
     "tmdbId": 471919,
     "channel": "Star Studios",
     "addedAt": "2026-10-31T04:51:33.948Z",
-    "popularity": 1.41
+    "popularity": 1.25
   },
   {
     "id": "55151598-269e-4a28-954e-b247ec82ac1b",
@@ -393,7 +730,7 @@
     "tmdbId": 402672,
     "channel": "Star Studios",
     "addedAt": "2026-10-31T04:51:11.528Z",
-    "popularity": 1.68
+    "popularity": 1.73
   },
   {
     "id": "dae49d7c-d556-4203-868b-00d1b0217f0d",
@@ -410,7 +747,7 @@
     "tmdbId": 412090,
     "channel": "Star Studios Premiere",
     "addedAt": "2026-10-31T04:50:23.255Z",
-    "popularity": 1.78
+    "popularity": 1.46
   },
   {
     "id": "f9ad55af-8375-45b2-b5ab-364c8845fe26",
@@ -427,7 +764,7 @@
     "tmdbId": 336790,
     "channel": "Star Studios Classics",
     "addedAt": "2026-10-31T04:48:58.094Z",
-    "popularity": 2.52
+    "popularity": 2.41
   },
   {
     "id": "a8626c24-acde-43d6-aa1d-16a17d312494",
@@ -444,7 +781,7 @@
     "tmdbId": 268860,
     "channel": "Star Studios Premiere",
     "addedAt": "2026-10-25T16:32:28.999Z",
-    "popularity": 1.8
+    "popularity": 1.88
   },
   {
     "id": "d6926ba8-0d10-4ae8-91ec-0a3277aaa810",
@@ -461,7 +798,7 @@
     "tmdbId": 26022,
     "channel": "Star Studios Premiere",
     "addedAt": "2026-10-25T16:32:25.214Z",
-    "popularity": 6.54
+    "popularity": 5.75
   },
   {
     "id": "983607b9-941a-486f-8058-e77b18e6412b",
@@ -478,7 +815,7 @@
     "tmdbId": 21297,
     "channel": "Star Studios Romance",
     "addedAt": "2026-10-25T16:32:24.356Z",
-    "popularity": 1.74
+    "popularity": 1.52
   },
   {
     "id": "17e7c481-46ba-4318-90e5-be407873c761",
@@ -495,7 +832,7 @@
     "tmdbId": 291157,
     "channel": "Star Studios Premiere",
     "addedAt": "2026-10-25T16:32:23.345Z",
-    "popularity": 1.39
+    "popularity": 1.31
   },
   {
     "id": "61e337aa-ea85-4ab8-b406-032466a27659",
@@ -512,7 +849,7 @@
     "tmdbId": 20027,
     "channel": "Star Studios Premiere",
     "addedAt": "2026-10-25T16:32:22.857Z",
-    "popularity": 1.23
+    "popularity": 1.22
   },
   {
     "id": "7d911781-f0c2-45d4-9be6-8179c88ac193",
@@ -546,7 +883,7 @@
     "tmdbId": 69891,
     "channel": "Star Studios Premiere",
     "addedAt": "2026-10-25T16:32:20.991Z",
-    "popularity": 1.44
+    "popularity": 1.31
   },
   {
     "id": "59acd2c4-50c2-4beb-8be5-e4a6cefea411",
@@ -563,7 +900,7 @@
     "tmdbId": 40777,
     "channel": "Star Studios Premiere",
     "addedAt": "2026-10-25T16:32:19.002Z",
-    "popularity": 1.4
+    "popularity": 1.28
   },
   {
     "id": "5277f152-d3f5-4164-9cc6-346340820582",
@@ -580,7 +917,7 @@
     "tmdbId": 217446,
     "channel": "Star Studios Premiere",
     "addedAt": "2026-10-25T16:32:16.637Z",
-    "popularity": 1.17
+    "popularity": 1.15
   },
   {
     "id": "44a004e9-544a-467a-8479-06da13a02dcc",
@@ -597,7 +934,7 @@
     "tmdbId": 570910,
     "channel": "Star Studios Premiere",
     "addedAt": "2026-10-25T16:32:15.433Z",
-    "popularity": 0.94
+    "popularity": 0.98
   },
   {
     "id": "b720bd31-3d2b-4f40-973f-e481377ecd48",
@@ -614,7 +951,7 @@
     "tmdbId": 247645,
     "channel": "Star Studios",
     "addedAt": "2026-10-25T16:32:14.527Z",
-    "popularity": 1.63
+    "popularity": 1.44
   },
   {
     "id": "3bc4adec-20cc-4026-b3d5-9b8f18e4175e",
@@ -631,7 +968,7 @@
     "tmdbId": 280795,
     "channel": "Star Studios",
     "addedAt": "2026-10-25T16:32:13.400Z",
-    "popularity": 1.54
+    "popularity": 1.52
   },
   {
     "id": "8d9b6219-faea-4fff-a320-8a16ed60e2fe",
@@ -648,7 +985,7 @@
     "tmdbId": 140896,
     "channel": "Star Studios Premiere",
     "addedAt": "2026-10-25T16:32:12.220Z",
-    "popularity": 1.49
+    "popularity": 1.18
   },
   {
     "id": "c8dbc613-a23f-4895-a299-669a11dd825d",
@@ -665,7 +1002,7 @@
     "tmdbId": 376047,
     "channel": "Star Studios Romance",
     "addedAt": "2026-10-25T16:32:11.009Z",
-    "popularity": 3.16
+    "popularity": 3.15
   },
   {
     "id": "702437ea-e039-4a01-90a1-9991c2bf7b81",
@@ -682,7 +1019,7 @@
     "tmdbId": 127501,
     "channel": "Star Studios Blockbuster",
     "addedAt": "2026-10-25T16:32:09.631Z",
-    "popularity": 2.65
+    "popularity": 2.17
   },
   {
     "id": "0834b8bc-b1c8-4f3f-b983-445fcee451dc",
@@ -699,7 +1036,7 @@
     "tmdbId": 157293,
     "channel": "Star Studios Classics",
     "addedAt": "2026-10-25T16:32:08.077Z",
-    "popularity": 1.24
+    "popularity": 1.15
   },
   {
     "id": "25d7967f-1804-49d7-abfa-dd9801cc0d6f",
@@ -716,7 +1053,7 @@
     "tmdbId": 19950,
     "channel": "Shemaroo",
     "addedAt": "2026-10-24T18:12:03.559Z",
-    "popularity": 2.2
+    "popularity": 2.02
   },
   {
     "id": "c577d6dc-6bb2-4884-8297-0b93ec4a0a43",
@@ -733,7 +1070,7 @@
     "tmdbId": 58333,
     "channel": "Shemaroo",
     "addedAt": "2026-10-24T18:12:01.969Z",
-    "popularity": 1.98
+    "popularity": 1.67
   },
   {
     "id": "94427fbd-1568-4be5-bb97-348718dde82e",
@@ -750,7 +1087,7 @@
     "tmdbId": 336211,
     "channel": "Eros Universe",
     "addedAt": "2026-10-24T18:11:59.797Z",
-    "popularity": 1.28
+    "popularity": 1.25
   },
   {
     "id": "d8803387-7057-4d53-b926-28cdb5238bae",
@@ -767,7 +1104,7 @@
     "tmdbId": 444713,
     "channel": "Shemaroo Movies",
     "addedAt": "2026-10-24T18:11:58.235Z",
-    "popularity": 1.53
+    "popularity": 1.45
   },
   {
     "id": "7652be0e-d7a3-47be-a5f5-d92b861251dd",
@@ -784,7 +1121,7 @@
     "tmdbId": 292830,
     "channel": "T-Series",
     "addedAt": "2026-10-25T12:42:26.266Z",
-    "popularity": 0.95
+    "popularity": 0.79
   },
   {
     "id": "b33b5e66-2250-4207-b991-ece16b6fff2d",
@@ -801,7 +1138,7 @@
     "tmdbId": 264085,
     "channel": "T-Series",
     "addedAt": "2026-10-25T12:41:49.283Z",
-    "popularity": 1.31
+    "popularity": 1.43
   },
   {
     "id": "657b2fb9-fa7d-4f8b-8aea-fc5981de46b5",
@@ -818,7 +1155,7 @@
     "tmdbId": 460844,
     "channel": "T-Series",
     "addedAt": "2026-10-25T12:41:13.500Z",
-    "popularity": 1.13
+    "popularity": 1.12
   },
   {
     "id": "da43fc2d-6f85-4efb-9848-a70fdd1e941b",
@@ -835,7 +1172,7 @@
     "tmdbId": 53299,
     "channel": null,
     "addedAt": "2026-10-25T12:19:06.503Z",
-    "popularity": 1.28
+    "popularity": 1.11
   },
   {
     "id": "12403f1b-1d58-4e35-b7ef-50e2e0b0ce80",
@@ -852,7 +1189,7 @@
     "tmdbId": 393421,
     "channel": null,
     "addedAt": "2026-10-25T12:19:05.018Z",
-    "popularity": 1.2
+    "popularity": 1.26
   },
   {
     "id": "b5315a2e-8736-4288-9959-51bd9abc82b9",
@@ -869,7 +1206,7 @@
     "tmdbId": 456562,
     "channel": null,
     "addedAt": "2026-10-25T12:19:04.308Z",
-    "popularity": 1.57
+    "popularity": 1.28
   },
   {
     "id": "dad2e1e5-1e9e-4fe4-8581-74378bbe2f3b",
@@ -886,7 +1223,7 @@
     "tmdbId": 441894,
     "channel": null,
     "addedAt": "2026-10-25T12:19:03.565Z",
-    "popularity": 1.78
+    "popularity": 2.19
   },
   {
     "id": "91c69045-9b06-44a9-a2f4-bbe2f2411628",
@@ -903,7 +1240,7 @@
     "tmdbId": 332835,
     "channel": "Sony WAH",
     "addedAt": "2026-10-25T12:10:04.460Z",
-    "popularity": 1.76
+    "popularity": 1.74
   },
   {
     "id": "bc1aa3f3-9b3b-4f2a-81ff-a95eb0ca1a6c",
@@ -920,7 +1257,7 @@
     "tmdbId": 79990,
     "channel": "Eros Universe Super Cinema",
     "addedAt": "2026-10-25T12:10:02.997Z",
-    "popularity": 1.95
+    "popularity": 1.64
   },
   {
     "id": "84373e1b-cdb9-42c5-a2a0-232d09745c22",
@@ -937,7 +1274,7 @@
     "tmdbId": 308165,
     "channel": "Eros Universe Super Cinema",
     "addedAt": "2026-10-25T12:10:01.693Z",
-    "popularity": 1.15
+    "popularity": 1.16
   },
   {
     "id": "b837747c-9288-4af4-88d8-fb2b80503ad3",
@@ -954,7 +1291,7 @@
     "tmdbId": 441868,
     "channel": "Eros Universe Super Cinema",
     "addedAt": "2026-10-25T12:09:59.522Z",
-    "popularity": 1.39
+    "popularity": 1.08
   },
   {
     "id": "f88c99f3-ad82-4751-9047-eeb601210f5e",
@@ -971,7 +1308,7 @@
     "tmdbId": 118628,
     "channel": "Eros Universe Super Cinema",
     "addedAt": "2026-10-25T12:09:57.949Z",
-    "popularity": 3.05
+    "popularity": 3.16
   },
   {
     "id": "c99aff9a-b5de-4d72-9008-ab185976e587",
@@ -988,7 +1325,7 @@
     "tmdbId": 456570,
     "channel": "T-Series",
     "addedAt": "2026-10-25T12:09:52.536Z",
-    "popularity": 2.28
+    "popularity": 2.3
   },
   {
     "id": "5d2fc616-a597-4514-8d5d-89fb23511eb2",
@@ -1005,7 +1342,7 @@
     "tmdbId": 252841,
     "channel": "Shemaroo Movies",
     "addedAt": "2026-10-24T17:18:02.539Z",
-    "popularity": 1.36
+    "popularity": 1.32
   },
   {
     "id": "4d939648-a926-4ad2-8eb5-04361fc863fb",
@@ -1022,7 +1359,7 @@
     "tmdbId": 396643,
     "channel": "Ultra Movie World",
     "addedAt": "2026-10-24T17:16:36.392Z",
-    "popularity": 1.47
+    "popularity": 1.32
   },
   {
     "id": "33906650-0b8b-450f-8a1c-06165f99885b",
@@ -1039,7 +1376,7 @@
     "tmdbId": 375290,
     "channel": "T-Series",
     "addedAt": "2026-10-24T17:16:34.881Z",
-    "popularity": 3.6
+    "popularity": 3.22
   },
   {
     "id": "73c4045a-52ef-427f-adb4-5cb2fbbc7380",
@@ -1056,7 +1393,7 @@
     "tmdbId": 259720,
     "channel": "Star Studios Premiere",
     "addedAt": "2026-10-24T17:16:33.055Z",
-    "popularity": 1.47
+    "popularity": 1.24
   },
   {
     "id": "ea594691-b6a2-4aa6-b639-7bc294563063",
@@ -1073,7 +1410,7 @@
     "tmdbId": 554600,
     "channel": "Zee Movies Hindi",
     "addedAt": "2026-10-24T17:10:14.475Z",
-    "popularity": 4.26
+    "popularity": 4.31
   },
   {
     "id": "8dc46838-ba02-4536-a086-d1778529b70c",
@@ -1090,7 +1427,7 @@
     "tmdbId": 79464,
     "channel": "Eros Universe",
     "addedAt": "2026-10-24T17:10:12.916Z",
-    "popularity": 3.81
+    "popularity": 3.5
   },
   {
     "id": "e55e4279-6640-49d5-95bd-31dc8b5b5986",
@@ -1107,7 +1444,7 @@
     "tmdbId": 19663,
     "channel": "Eros Universe Cineplex",
     "addedAt": "2026-10-24T17:10:11.283Z",
-    "popularity": 1.61
+    "popularity": 1.69
   },
   {
     "id": "39b5a241-9b2d-4c6f-85dc-a53c26114821",
@@ -1124,7 +1461,7 @@
     "tmdbId": 19418,
     "channel": "Shemaroo Comedy",
     "addedAt": "2026-10-24T17:10:09.617Z",
-    "popularity": 1.77
+    "popularity": 1.57
   },
   {
     "id": "cf283e6c-7f9d-4e87-b700-6fd7d0aaf49b",
@@ -1141,7 +1478,7 @@
     "tmdbId": 171879,
     "channel": "Eros Universe",
     "addedAt": "2026-10-24T17:10:07.942Z",
-    "popularity": 1.03
+    "popularity": 1.05
   },
   {
     "id": "df79df96-6265-4265-8421-2a2a3b9654be",
@@ -1158,7 +1495,7 @@
     "tmdbId": 205017,
     "channel": "B-Town Blockbuster",
     "addedAt": "2026-10-24T15:43:38.673Z",
-    "popularity": 1.63
+    "popularity": 1.53
   },
   {
     "id": "80971be1-81f1-46d2-8ea4-0a6f6ea7c3f3",
@@ -1175,7 +1512,7 @@
     "tmdbId": 158519,
     "channel": "Goldmines Bollywood",
     "addedAt": "2026-10-24T15:42:33.139Z",
-    "popularity": 1.63
+    "popularity": 1.46
   },
   {
     "id": "aa2a0d10-ae2a-478b-9469-072a01ce5259",
@@ -1192,7 +1529,7 @@
     "tmdbId": 19951,
     "channel": "Goldmines Bollywood",
     "addedAt": "2026-10-24T15:41:52.466Z",
-    "popularity": 1.15
+    "popularity": 1.16
   },
   {
     "id": "199e4d0e-eee6-4ddd-af5a-8805f97434fd",
@@ -1209,7 +1546,7 @@
     "tmdbId": 25516,
     "channel": null,
     "addedAt": "2026-10-24T15:38:56.545Z",
-    "popularity": 3.59
+    "popularity": 3.34
   },
   {
     "id": "5f1dff8f-a1e9-4c42-8fba-48d2b7767c7d",
@@ -1226,7 +1563,7 @@
     "tmdbId": 391779,
     "channel": "Eros Universe Big Picture",
     "addedAt": "2026-10-24T15:37:24.079Z",
-    "popularity": 1.3
+    "popularity": 1.15
   },
   {
     "id": "6259f739-7e86-48ca-ac3f-4b0a53410869",
@@ -1243,7 +1580,7 @@
     "tmdbId": 85052,
     "channel": "Shemaroo Movies",
     "addedAt": "2026-10-24T15:36:55.090Z",
-    "popularity": 2.1
+    "popularity": 1.75
   },
   {
     "id": "dfadd26a-3dfa-457c-a9b2-918bbf8bf155",
@@ -1260,7 +1597,7 @@
     "tmdbId": 58051,
     "channel": "Eros Universe Showtime",
     "addedAt": "2026-10-24T15:36:32.853Z",
-    "popularity": 2.09
+    "popularity": 2.04
   },
   {
     "id": "69c91b78-5798-4939-ac8d-0c70b401808e",
@@ -1277,7 +1614,7 @@
     "tmdbId": 16987,
     "channel": null,
     "addedAt": "2026-10-24T15:34:04.507Z",
-    "popularity": 1.68
+    "popularity": 1.78
   },
   {
     "id": "a1b99630-43eb-4a7d-a9a6-5ff22f1992dd",
@@ -1294,7 +1631,7 @@
     "tmdbId": 441071,
     "channel": "Ultra 4K Movies",
     "addedAt": "2026-10-24T15:31:59.431Z",
-    "popularity": 1.87
+    "popularity": 1.74
   },
   {
     "id": "fdbf6f03-4d31-45e9-a828-52499fe35f1b",
@@ -1311,7 +1648,7 @@
     "tmdbId": 273886,
     "channel": "Ultra Bollywood",
     "addedAt": "2026-10-24T15:29:35.889Z",
-    "popularity": 1.68
+    "popularity": 1.34
   },
   {
     "id": "3a0f322c-2ea5-40c2-be77-781c782f9967",
@@ -1328,7 +1665,7 @@
     "tmdbId": 25867,
     "channel": "Eros Universe",
     "addedAt": "2026-10-24T15:27:39.725Z",
-    "popularity": 1.34
+    "popularity": 1.24
   },
   {
     "id": "607ab88a-66a1-4e00-8aa7-8449ee72243e",
@@ -1345,7 +1682,7 @@
     "tmdbId": 204435,
     "channel": null,
     "addedAt": "2026-10-24T15:18:05.591Z",
-    "popularity": 2.26
+    "popularity": 2.23
   },
   {
     "id": "bdd584a6-5a83-414c-b154-526867e64307",
@@ -1362,7 +1699,7 @@
     "tmdbId": 285803,
     "channel": "Shemaroo Movies",
     "addedAt": "2026-10-24T10:53:37.373Z",
-    "popularity": 1.62
+    "popularity": 1.51
   },
   {
     "id": "5f1cc96e-8e2f-403f-bb5a-34b5bbdeea1a",
@@ -1379,7 +1716,7 @@
     "tmdbId": 70590,
     "channel": "RelianceEntertainment",
     "addedAt": "2026-10-24T10:52:52.255Z",
-    "popularity": 3.22
+    "popularity": 2.99
   },
   {
     "id": "759741f6-4686-45b1-a3d2-2bdaa0c8ab98",
@@ -1396,7 +1733,7 @@
     "tmdbId": 278347,
     "channel": null,
     "addedAt": "2026-10-24T10:49:29.780Z",
-    "popularity": 2.15
+    "popularity": 2.02
   },
   {
     "id": "8977c37f-c457-4e73-a48f-2c84ba576cd2",
@@ -1413,7 +1750,7 @@
     "tmdbId": 19025,
     "channel": "T-Series",
     "addedAt": "2026-10-24T10:48:12.786Z",
-    "popularity": 2.5
+    "popularity": 1.95
   },
   {
     "id": "efccdc42-f54d-4444-9b77-fde6e2882965",
@@ -1430,7 +1767,7 @@
     "tmdbId": 357563,
     "channel": "Shemaroo",
     "addedAt": "2026-10-24T10:44:53.221Z",
-    "popularity": 1.6
+    "popularity": 1.58
   },
   {
     "id": "17c80d04-1608-40d8-a754-cb479e39f462",
@@ -1447,7 +1784,7 @@
     "tmdbId": 20294,
     "channel": "Shemaroo Movies",
     "addedAt": "2026-10-24T10:43:30.342Z",
-    "popularity": 2.08,
+    "popularity": 2.12,
     "trailerKey": "MIfMuGSIzag"
   },
   {
@@ -1465,7 +1802,7 @@
     "tmdbId": 19670,
     "channel": "Shemaroo Comedy",
     "addedAt": "2026-10-24T10:41:55.309Z",
-    "popularity": 1.38
+    "popularity": 2.05
   },
   {
     "id": "ef95d3d3-98cb-4e10-9ed4-6a02f3b2805f",
@@ -1482,7 +1819,7 @@
     "tmdbId": 14546,
     "channel": "Shemaroo Comedy",
     "addedAt": "2026-10-24T10:41:12.655Z",
-    "popularity": 2.86
+    "popularity": 2.42
   },
   {
     "id": "33b57c44-fb95-4385-bb1d-76e68ac997fc",
@@ -1499,7 +1836,7 @@
     "tmdbId": 32740,
     "channel": null,
     "addedAt": "2026-10-24T10:00:26.947Z",
-    "popularity": 2.96,
+    "popularity": 3.29,
     "trailerKey": "JUD-51_SwrQ"
   },
   {
@@ -1517,7 +1854,7 @@
     "tmdbId": 472123,
     "channel": "Shemaroo Comedy",
     "addedAt": "2026-10-24T09:57:43.060Z",
-    "popularity": 1.89
+    "popularity": 1.68
   },
   {
     "id": "888cdd2c-41a3-47f3-b17a-3be1a281903b",
@@ -1534,7 +1871,7 @@
     "tmdbId": 20359,
     "channel": "Shemaroo Comedy",
     "addedAt": "2026-10-24T09:50:44.191Z",
-    "popularity": 1.66
+    "popularity": 1.58
   },
   {
     "id": "3d823a86-8372-4170-a146-3e5eb28ca7ef",
@@ -1551,7 +1888,7 @@
     "tmdbId": 512098,
     "channel": "T-Series",
     "addedAt": "2026-10-24T09:48:42.126Z",
-    "popularity": 1.22
+    "popularity": 1.07
   },
   {
     "id": "4c1d29bb-1f87-4540-a234-8b2582118651",
@@ -1568,7 +1905,7 @@
     "tmdbId": 157129,
     "channel": "Shemaroo",
     "addedAt": "2026-10-24T09:47:31.724Z",
-    "popularity": 1.69
+    "popularity": 1.41
   },
   {
     "id": "d07a93ad-ecb7-4adb-ad82-72b08c68aeef",
@@ -1585,7 +1922,7 @@
     "tmdbId": 534780,
     "channel": "Star Studios",
     "addedAt": "2026-10-24T09:42:52.618Z",
-    "popularity": 3.61
+    "popularity": 3.49
   },
   {
     "id": "a49249d7-3a45-42f0-9318-fff5742bd2fc",
@@ -1602,7 +1939,7 @@
     "tmdbId": 206324,
     "channel": "Star Studios",
     "addedAt": "2026-10-24T09:40:19.836Z",
-    "popularity": 1.99
+    "popularity": 2.18
   },
   {
     "id": "ce260bea-69c1-4b88-bcbe-cac514c66b6c",
@@ -1619,7 +1956,7 @@
     "tmdbId": 342291,
     "channel": null,
     "addedAt": "2026-10-24T09:26:40.225Z",
-    "popularity": 1.24
+    "popularity": 1.14
   },
   {
     "id": "4c8c9d59-092b-4327-8a4f-039ed4de2567",
@@ -1636,7 +1973,7 @@
     "tmdbId": 314389,
     "channel": "T-Series",
     "addedAt": "2026-10-24T09:20:16.473Z",
-    "popularity": 3.92
+    "popularity": 3.03
   },
   {
     "id": "07a2a138-672b-4015-b337-96cbc4746347",
@@ -1653,7 +1990,7 @@
     "tmdbId": 393441,
     "channel": "Eros Universe Cineplex",
     "addedAt": "2026-10-25T14:23:15.824Z",
-    "popularity": 1.42
+    "popularity": 1.26
   },
   {
     "id": "f79b374e-3fad-41cd-bb85-2b864a27516f",
@@ -1670,7 +2007,7 @@
     "tmdbId": 19636,
     "channel": "Venus Movies",
     "addedAt": "2026-10-25T14:21:32.458Z",
-    "popularity": 1.47
+    "popularity": 1.36
   },
   {
     "id": "fe8f8bb9-b746-40fc-947a-997565b7ca64",
@@ -1687,7 +2024,7 @@
     "tmdbId": 15917,
     "channel": "Eros Universe",
     "addedAt": "2026-10-25T14:21:28.614Z",
-    "popularity": 3.18
+    "popularity": 3.27
   },
   {
     "id": "d9fbe022-329d-447a-8fc2-621f4a292bbd",
@@ -1704,7 +2041,7 @@
     "tmdbId": 252053,
     "channel": "T-Series",
     "addedAt": "2026-10-25T14:17:57.317Z",
-    "popularity": 1.09
+    "popularity": 0.89
   },
   {
     "id": "16bd86ae-a5e6-48e6-89c9-69bf45858527",
@@ -1721,7 +2058,7 @@
     "tmdbId": 444011,
     "channel": "T-Series",
     "addedAt": "2026-10-25T14:17:56.019Z",
-    "popularity": 1.65
+    "popularity": 2.12
   },
   {
     "id": "10193d96-7dc4-459d-beed-b9ad3754758e",
@@ -1738,7 +2075,7 @@
     "tmdbId": 191121,
     "channel": "Eros Universe",
     "addedAt": "2026-10-25T14:17:54.681Z",
-    "popularity": 2.11
+    "popularity": 1.86
   },
   {
     "id": "d0563f19-0e07-44c0-b15a-476d166a14db",
@@ -1755,7 +2092,7 @@
     "tmdbId": 20360,
     "channel": "Ultra 4K Movies",
     "addedAt": "2026-10-25T14:17:53.217Z",
-    "popularity": 1.69
+    "popularity": 1.62
   },
   {
     "id": "e65dca90-abe7-41e0-87fc-7fdf6f126349",
@@ -1772,7 +2109,7 @@
     "tmdbId": 339367,
     "channel": "Star Studios Premiere",
     "addedAt": "2026-10-25T14:17:51.068Z",
-    "popularity": 1.33
+    "popularity": 1.23
   },
   {
     "id": "34497c56-fb84-4854-a573-afa8c6bb5ef6",
@@ -1789,6 +2126,6 @@
     "tmdbId": 11807,
     "channel": "Shemaroo",
     "addedAt": "2026-10-25T14:17:49.309Z",
-    "popularity": 2.29
+    "popularity": 2.2
   }
 ]
