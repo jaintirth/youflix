@@ -1,6 +1,6 @@
 # YOUFLIX MongoDB design
 
-Companion to `scripts/migrate_to_mongo.py`. YOUFLIX is a discovery site: it tells people that a piece of free, legal content exists somewhere and sends them to it. So the model is deliberately small: **one item, one source link** (a video, or a playlist / first episode). There are no per-episode records.
+Companion to `backend/scripts/migrate_to_mongo.py`. YOUFLIX is a discovery site: it tells people that a piece of free, legal content exists somewhere and sends them to it. So the model is deliberately small: **one item, one source link** (a video, or a playlist / first episode). There are no per-episode records.
 
 The design has to cope with more than YouTube movies and series: other providers (Dailymotion, Internet Archive, Project Gutenberg...) and other content types (audiobooks, music, podcasts, theatre, courses, books). It does that without extra collections.
 
@@ -51,7 +51,7 @@ Later, user features (my list, resume position) get their own collections keyed 
 An audiobook would look the same except for `externalIds` (`[{ "system": "openlibrary", "id": "OL123W" }]`), `source` (`provider: "librivox"`) and `details` (`{ "narrators": [...], "authors": [...], "durationSec": 41000 }`). It has no popularity score or trailer, and nothing breaks without them.
 
 - **`_id` is the existing UUID string.** `/movie/<id>` links and the API's `id` keep working. The API maps `_id` to `id` on the way out.
-- **`type` is what the content is**; `source.provider` is where it lives. Adding a content type means adding a value to `ITEM_TYPES` in the script and running the validator update (`python scripts/migrate_to_mongo.py` re-applies it); no data changes.
+- **`type` is what the content is**; `source.provider` is where it lives. Adding a content type means adding a value to `ITEM_TYPES` in the script and running the validator update (`python backend/scripts/migrate_to_mongo.py` re-applies it); no data changes.
 - **`source` is a single embedded object**, not an array. If one title is ever found on two providers, that is two items or a deliberate redesign; do not add an array speculatively. Everything that locates the content is inside it, so replacing a dead link is one `$set` on `source`.
 - **`externalIds`** are the work's ids in other databases, as `{system, id}` pairs: `tmdb:movie` and `tmdb:tv` today (TMDB numbers movies and TV separately), later `isbn`, `musicbrainz`, `openlibrary`. A new system needs no new index and no schema change. An item with no external id has `[]`.
 - **Dates are BSON dates.** The API serialises them back to `2026-10-24T10:43:30.342Z` (`to_iso()` in the script; the tests check all 135 titles round-trip identically).
@@ -67,7 +67,7 @@ An audiobook would look the same except for `externalIds` (`[{ "system": "openli
 |---|---|
 | `(source.provider, source.externalId)` unique | the "already in the catalogue" rule for every provider, race-proof; a duplicate-key error becomes the existing `409` |
 | `(externalIds.system, externalIds.id)` unique, partial on `externalIds.system` existing | stops the same TMDB title being published twice. Partial because an item with no external ids would otherwise index as a single null key and collide with every other such item |
-| `(type, details.popularity -1, addedAt -1)` | browsing one content type, most popular first. MongoDB sorts missing and `null` lowest, so descending puts unscored items last, newest first: exactly `byPopularity()` in `server.js`. Types with no score (audiobooks...) simply come out newest first. If a type later gets its own ranking, add it to `details` and index it the same way |
+| `(type, details.popularity -1, addedAt -1)` | browsing one content type, most popular first. MongoDB sorts missing and `null` lowest, so descending puts unscored items last, newest first: exactly the `byPopularity()` order the old Express server used. Types with no score (audiobooks...) simply come out newest first. If a type later gets its own ranking, add it to `details` and index it the same way |
 
 No index on `category`, `genres` or `languages` yet: the browser does all filtering and search on the full list. Add them when search moves server-side.
 
@@ -128,23 +128,25 @@ Providers and metadata sources are **code** (one adapter each: parse a URL into 
 - New provider: write the adapter. No schema change.
 - New content type: add the value to `ITEM_TYPES`, re-run the script to update the validator, add its `details` model in the application, and write the metadata adapter for it (Open Library for books, MusicBrainz for music...).
 
-## Changes the backend needs beyond a straight port
+## How the FastAPI backend differs from the old Express server
 
-- **Per-document writes.** Add, edit and delete become `insert_one` / `update_one` / `delete_one`. The daily popularity refresh should be one `bulk_write` of `$set: {"details.popularity": ..., updatedAt}`; today it rewrites the whole file and can clobber an admin edit made while it runs.
-- **Old API shape.** The frontend reads flat `youtubeId`, `youtubeUrl`, `kind`, `channel`, `tmdbId`, `isAnime`, `popularity` and `trailerKey`. Until the frontend changes, the API should project them from `source`, `externalIds` and `details`, and rename `_id` to `id`.
-- **Pagination.** Titles average about 850 bytes, so returning the whole catalogue is about 115 KB today and would be about 8.5 MB at 10,000 items. Somewhere past a thousand items, add `GET /api/items?type=&cursor=` with keyset pagination on `(details.popularity, _id)`, and move search server-side.
-- **Popularity for series.** `tmdbPopularity` always calls the movie endpoints. Choose `movie` or `tv` from the item.
-- **Category backfills** (`inferCategory` / anime genres at startup) become explicit commands, not part of boot.
-- **Scheduler.** With several workers a `setInterval` runs once per worker. Run the refresh as a separate cron/scheduled job.
-- **Error shape.** Keep `{ "error": "..." }` for every failure, including database validation and duplicate-key errors.
+- **Per-document writes.** Add, edit and delete are single-document operations. The popularity refresh (`python -m app.jobs.refresh_popularity`) only `$set`s the score, so it cannot overwrite an admin edit made while it runs. It is a separate command, run daily by a scheduler, so it runs once however many workers serve the site.
+- **Old API shape.** The frontend still reads flat `youtubeId`, `youtubeUrl`, `kind`, `channel`, `tmdbId`, `isAnime`, `popularity` and `trailerKey`. `app/serialize.py` projects them from `source`, `externalIds` and `details` and renames `_id` to `id`. A test checks all 135 current titles come out identical to what the Express server returned.
+- **Popularity for series** uses TMDB's TV endpoints (the Express server always used the movie ones).
+- **Category backfills** are an explicit command (`python -m app.jobs.backfill_categories`), not part of startup.
+- **Sessions and the TMDB detail cache** live in MongoDB (`admin_sessions`, `metadata_cache`), so several workers share them.
+- **External calls have timeouts** (8 s YouTube, 10 s TMDB).
+- **Errors** keep the `{ "error": "..." }` shape, including validation and unexpected failures.
+- **Duplicates** are enforced by the unique indexes. One consequence: adding a title directly with a TMDB id that is already in the catalogue now returns `409` (the Express server allowed duplicates there; only shortlisting checked).
+- **Not done yet: pagination.** Titles average about 850 bytes, so returning the whole catalogue is about 115 KB today and would be about 8.5 MB at 10,000 items. Somewhere past a thousand items, add `GET /api/items?type=&cursor=` with keyset pagination on `(details.popularity, _id)`, and move search server-side.
 
 ## Running the migration
 
 ```bash
-pip install -r scripts/requirements.txt
-python scripts/migrate_to_mongo.py --dry-run          # validates both files; no database needed
-python scripts/migrate_to_mongo.py                    # import; MONGODB_URI from the environment or .env
-python scripts/migrate_to_mongo.py --verify-only      # re-compare the database with the files
+pip install -r backend/requirements.txt
+python backend/scripts/migrate_to_mongo.py --dry-run          # validates both files; no database needed
+python backend/scripts/migrate_to_mongo.py                    # import; MONGODB_URI from the environment or .env
+python backend/scripts/migrate_to_mongo.py --verify-only      # re-compare the database with the files
 ```
 
 - Re-running is safe: documents that already exist are skipped, so edits made through the admin after cutover are not overwritten. `--overwrite` replaces them from the files.

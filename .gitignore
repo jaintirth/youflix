@@ -1,3 +1,8 @@
 node_modules/
 .env
 data/candidates.json
+__pycache__/
+*.pyc
+.venv/
+venv/
+venvv/

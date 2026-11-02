@@ -1,7 +1,7 @@
 """Tests for migrate_to_mongo.py against an in-memory MongoDB (mongomock).
 
-    pip install pymongo mongomock
-    python -m unittest scripts/test_migrate_to_mongo.py
+    pip install -r requirements-dev.txt
+    cd backend && python -m unittest discover tests
 
 Unique-index enforcement and the collection validator are MongoDB features that mongomock only partly emulates,
 so run `migrate_to_mongo.py` once against a throwaway database (e.g. a free Atlas cluster) before the real import.
@@ -16,8 +16,9 @@ from unittest import mock
 
 import mongomock
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import migrate_to_mongo as m  # noqa: E402
+from app import schema  # noqa: E402
 
 NOW = datetime(2026, 11, 3, tzinfo=timezone.utc)
 REAL_TITLES = m.ROOT / "data" / "titles.json"
@@ -49,7 +50,7 @@ class MigrationTest(unittest.TestCase):
         self.addCleanup(self.tmp.cleanup)
         self.db = mongomock.MongoClient(tz_aware=True)["youflix_test"]
         # mongomock cannot create collections with a validator; that part needs a real server.
-        patcher = mock.patch.object(m, "ensure_collection")
+        patcher = mock.patch.object(schema, "ensure_collection")
         patcher.start()
         self.addCleanup(patcher.stop)
 
