@@ -29,19 +29,19 @@ def login(response: Response, body: LoginBody = Body(default_factory=LoginBody),
         raise HTTPException(401, "Wrong password")
     token = auth.create_session(db)
     response.set_cookie(auth.COOKIE, token, max_age=auth.SESSION_SECONDS, httponly=True, samesite="strict", path="/")
-    return {"ok": True}
+    return {"ok": True, "token": token}
 
 
 @router.post("/api/admin/logout")
 def logout(request: Request, response: Response, db=Depends(get_db)):
-    auth.delete_session(db, request.cookies.get(auth.COOKIE))
+    auth.delete_session(db, auth.get_token(request))
     response.delete_cookie(auth.COOKIE, path="/")
     return {"ok": True}
 
 
 @router.get("/api/admin/me")
 def me(request: Request, db=Depends(get_db)):
-    return {"admin": auth.is_admin(db, request.cookies.get(auth.COOKIE))}
+    return {"admin": auth.is_admin(db, auth.get_token(request))}
 
 
 # ---------- discovery ----------

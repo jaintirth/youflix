@@ -434,3 +434,36 @@ class Jobs(ApiTest):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SplitDeployment(ApiTest):
+    def make(self, **env):
+        with mock.patch.dict(os.environ, env):
+            config.get_settings.cache_clear()
+            app = create_app()
+        app.dependency_overrides[get_db] = lambda: self.db
+        return TestClient(app, raise_server_exceptions=False)
+
+    def test_bearer_token_auth_without_cookie(self):
+        token = self.client.post("/api/admin/login", json={"password": "pw"}).json()["token"]
+        fresh = TestClient(self.client.app, raise_server_exceptions=False)      # no cookies
+        self.assertFalse(fresh.get("/api/admin/me").json()["admin"])
+        h = {"Authorization": f"Bearer {token}"}
+        self.assertTrue(fresh.get("/api/admin/me", headers=h).json()["admin"])
+        self.assertEqual(fresh.get("/api/admin/config", headers=h).status_code, 200)
+        fresh.post("/api/admin/logout", headers=h)
+        self.assertFalse(fresh.get("/api/admin/me", headers=h).json()["admin"])
+
+    def test_cors_only_for_configured_origins(self):
+        c = self.make(CORS_ORIGINS="https://youflix.onrender.com/")
+        ok = c.options("/api/titles", headers={"Origin": "https://youflix.onrender.com", "Access-Control-Request-Method": "GET",
+                                               "Access-Control-Request-Headers": "authorization"})
+        self.assertEqual(ok.headers.get("access-control-allow-origin"), "https://youflix.onrender.com")
+        bad = c.get("/api/titles", headers={"Origin": "https://evil.example"})
+        self.assertNotIn("access-control-allow-origin", bad.headers)
+
+    def test_api_only_mode_serves_no_pages(self):
+        c = self.make(SERVE_FRONTEND="false")
+        for path in ("/", "/admin", "/movie/x", "/style.css"):
+            self.assertEqual(c.get(path).status_code, 404, path)
+        self.assertEqual(c.get("/api/titles").status_code, 200)

@@ -22,6 +22,12 @@ class Settings(BaseSettings):
     admin_password: str = "admin"
     tmdb_api_key: str = ""
     tmdb_token: str = ""      # v4 read access token (alternative to the v3 key)
+    cors_origins: str = ""    # comma-separated frontend origins allowed to call the API, e.g. https://youflix.onrender.com
+    serve_frontend: bool = True   # False on the API-only deployment (frontend hosted elsewhere)
+
+    @property
+    def cors_origin_list(self) -> list[str]:
+        return [o.strip().rstrip("/") for o in self.cors_origins.split(",") if o.strip()]
 
 
 @lru_cache

@@ -4,7 +4,7 @@ const tmdbSize = (u, size) => u ? String(u).replace(/\/t\/p\/w\d+\//, `/t/p/${si
 const page = document.getElementById('page');
 const id = decodeURIComponent(location.pathname.split('/')[2] || '');
 
-fetch(`/api/titles/${encodeURIComponent(id || '')}/details`)
+apiFetch(`/api/titles/${encodeURIComponent(id || '')}/details`)
   .then(r => r.ok ? r.json() : Promise.reject())
   .then(draw)
   .catch(() => { page.innerHTML = '<div class="empty" style="padding-top:140px">Title not found. <a href="/" style="color:var(--red)">Back to home</a></div>'; });
@@ -51,7 +51,7 @@ function franchise(title) {
 }
 
 // "More like this": franchise entries (sequels/prequels) first, then the rest of the same category.
-function loadSimilar(t) { fetch('/api/titles').then(r => r.json()).then(all => {
+function loadSimilar(t) { apiFetch('/api/titles').then(r => r.json()).then(all => {
   const me = franchise(t.title);
   const pool = all.filter(x => x.id !== t.id && !!x.isAnime === !!t.isAnime); // anime stays with anime, movies with movies
   const series = pool.map(x => ({ x, f: franchise(x.title) })).filter(({ f }) => me.key.length >= 3 && f.key === me.key)

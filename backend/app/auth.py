@@ -35,6 +35,14 @@ def is_admin(db, token: str | None) -> bool:
         {"tokenHash": _hash(token), "expiresAt": {"$gt": datetime.now(timezone.utc)}}, limit=1) > 0
 
 
+def get_token(request: Request) -> str | None:
+    """`Authorization: Bearer <token>` (cross-origin frontend) or the cookie (same-origin)."""
+    header = request.headers.get("authorization", "")
+    if header[:7].lower() == "bearer " and header[7:].strip():
+        return header[7:].strip()
+    return request.cookies.get(COOKIE)
+
+
 def require_admin(request: Request, db=Depends(get_db)) -> None:
-    if not is_admin(db, request.cookies.get(COOKIE)):
+    if not is_admin(db, get_token(request)):
         raise HTTPException(401, "Not authorised")

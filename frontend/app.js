@@ -212,4 +212,4 @@ document.querySelectorAll('[data-tab]').forEach(a => a.onclick = e => {
   scrollTo(0, 0);
 });
 
-fetch('/api/titles').then(r => r.json()).then(d => { titles = d; render(); });
+apiFetch('/api/titles').then(r => r.json()).then(d => { titles = d; render(); });

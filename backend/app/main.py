@@ -4,12 +4,13 @@ from __future__ import annotations
 import logging
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from .config import FRONTEND_DIR
+from .config import FRONTEND_DIR, get_settings
 from .routes import admin, public, titles
 
 log = logging.getLogger("youflix")
@@ -32,26 +33,34 @@ def create_app() -> FastAPI:
         log.exception("Unhandled error on %s %s", request.method, request.url.path)
         return JSONResponse({"error": "Something went wrong"}, status_code=500)
 
+    settings = get_settings()
+    if settings.cors_origin_list:
+        # Auth is a bearer token in the Authorization header, so cookies/credentials are not needed cross-origin.
+        app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origin_list, allow_methods=["*"],
+                           allow_headers=["Authorization", "Content-Type"], max_age=600)
+
     app.include_router(public.router)
     app.include_router(admin.router)
     app.include_router(titles.router)
 
-    # Clean URLs: /movie/<id> and /admin instead of the .html files.
-    @app.get("/movie.html", include_in_schema=False)
-    @app.get("/admin.html", include_in_schema=False)
-    def drop_html(request: Request):
-        return RedirectResponse(request.url.path.removesuffix(".html"), status_code=301)
+    if settings.serve_frontend:
+        # Clean URLs: /movie/<id> and /admin instead of the .html files.
+        @app.get("/movie.html", include_in_schema=False)
+        @app.get("/admin.html", include_in_schema=False)
+        def drop_html(request: Request):
+            return RedirectResponse(request.url.path.removesuffix(".html"), status_code=301)
 
-    @app.get("/movie/{title_id}", include_in_schema=False)
-    def movie_page(title_id: str):
-        return FileResponse(FRONTEND_DIR / "movie.html")
+        @app.get("/movie/{title_id}", include_in_schema=False)
+        def movie_page(title_id: str):
+            return FileResponse(FRONTEND_DIR / "movie.html")
 
-    @app.get("/admin", include_in_schema=False)
-    def admin_page():
-        return FileResponse(FRONTEND_DIR / "admin.html")
+        @app.get("/admin", include_in_schema=False)
+        def admin_page():
+            return FileResponse(FRONTEND_DIR / "admin.html")
 
-    # Everything else is the static frontend; mounted last so the routes above win.
-    app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
+        # Everything else is the static frontend; mounted last so the routes above win.
+        app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
+
     return app
 
 

@@ -5,7 +5,7 @@ A Netflix-style front end for movies and series that are **already free on YouTu
 ## Layout
 
 ```
-frontend/   static site (HTML, CSS, JavaScript), served by the backend
+frontend/   static site (HTML, CSS, JavaScript); hosted separately, or served by the backend in local dev
 backend/    FastAPI + MongoDB
   app/        the API, routes, TMDB and YouTube clients, schema, background jobs
   scripts/    one-off tools, e.g. the JSON -> MongoDB migration
@@ -79,7 +79,16 @@ python -m unittest discover tests
 
 ## Deploying
 
-Build: `pip install -r backend/requirements.txt`. Start: `uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port $PORT`. Set the environment variables above. Sessions and caches are stored in MongoDB, so more than one worker is fine.
+**API** (e.g. Wasmer): Build `pip install -r backend/requirements.txt`. Start `uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port $PORT`. Set the variables above plus:
+
+| Variable | Meaning |
+|---|---|
+| `SERVE_FRONTEND` | `false` on the API-only deployment (default `true` serves `frontend/` too, for local dev) |
+| `CORS_ORIGINS` | comma-separated frontend origins allowed to call the API, e.g. `https://youflix.onrender.com` |
+
+**Frontend** (Render Static Site, see `render.yaml`): set `API_BASE` to the API's URL (no trailing slash). The build step writes it into `frontend/config.js`; `/movie/*` and `/admin` are rewritten to their HTML files.
+
+Admin auth is a bearer token: `POST /api/admin/login` returns `{token}`, which the admin page stores and sends as `Authorization: Bearer ...`. The cookie is still set for same-origin use. Sessions and caches are stored in MongoDB, so more than one worker is fine.
 
 ## Content policy
 

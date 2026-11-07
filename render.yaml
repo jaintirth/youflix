@@ -1,0 +1,23 @@
+# Frontend only: a Render Static Site. The API runs elsewhere (Wasmer) - set API_BASE to its URL.
+services:
+  - type: web
+    name: youflix-frontend
+    runtime: static
+    rootDir: frontend
+    # Writes the API URL into config.js at build time (committed default is "" = same origin).
+    buildCommand: echo "window.YOUFLIX_API_BASE = '${API_BASE}';" > config.js
+    staticPublishPath: .
+    envVars:
+      - key: API_BASE
+        sync: false          # e.g. https://youflix-api.wasmer.app
+    routes:
+      - type: rewrite
+        source: /movie/*
+        destination: /movie.html
+      - type: rewrite
+        source: /admin
+        destination: /admin.html
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
