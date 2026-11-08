@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 
+import certifi
 from pymongo import MongoClient
 from pymongo.database import Database
 
@@ -10,7 +11,8 @@ from .config import get_settings
 
 @lru_cache
 def _client(uri: str) -> MongoClient:
-    return MongoClient(uri, tz_aware=True, serverSelectionTimeoutMS=8000)
+    # certifi's CA bundle: some hosts (e.g. Wasmer) ship Python without a system certificate store.
+    return MongoClient(uri, tz_aware=True, serverSelectionTimeoutMS=8000, tlsCAFile=certifi.where())
 
 
 def get_db() -> Database:
