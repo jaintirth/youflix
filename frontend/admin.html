@@ -38,7 +38,9 @@
       <div class="toolbar">
         <input id="filter" placeholder="Search catalogue...">
         <span class="total" id="total"></span>
+        <button class="btn sm" id="refresh-pop" title="Re-read each title's TMDB popularity score, which sets the home page order">Refresh popularity</button>
       </div>
+      <div class="msg" id="refresh-msg" role="status"></div>
       <div class="list" id="list"></div>
     </section>
 
@@ -90,6 +92,8 @@
     </section>
   </div>
 </div>
+<script src="/config.js"></script>
+<script src="/api.js"></script>
 <script src="/admin.js"></script>
 </body>
 </html>

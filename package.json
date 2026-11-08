@@ -1,15 +1,12 @@
 {
   "name": "youflix",
-  "version": "0.1.0",
-  "description": "A Netflix-style catalogue of movies and series that are legally free on YouTube.",
+  "version": "0.2.0",
+  "description": "YOUFLIX frontend host: serves the static site and points it at the API (API_BASE).",
+  "private": true,
   "main": "server.js",
   "scripts": {
-    "start": "node --env-file-if-exists=.env server.js",
-    "dev": "node --watch --env-file-if-exists=.env server.js"
+    "start": "node server.js"
   },
-  "engines": { "node": ">=22.9" },
-  "license": "MIT",
-  "dependencies": {
-    "express": "^4.21.2"
-  }
+  "engines": { "node": ">=18" },
+  "license": "MIT"
 }

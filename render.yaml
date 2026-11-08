@@ -1,0 +1,12 @@
+# Frontend only. A small Node web service (server.js) serves frontend/ and points it at the API, which runs elsewhere
+# (Wasmer). Set API_BASE to the API's URL. The API must list this site's address in its CORS_ORIGINS.
+services:
+  - type: web
+    name: youflix
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: API_BASE
+        sync: false          # e.g. https://youflix-api.wasmer.app (no trailing slash)

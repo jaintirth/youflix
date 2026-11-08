@@ -1,7 +1,7 @@
 const $ = id => document.getElementById(id);
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ESC[c]);
-const post = (url, body) => fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
+const post = (url, body) => apiFetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
 
 function show(admin) {
   $('login').hidden = admin; $('dash').hidden = !admin; $('logout').hidden = !admin;
@@ -20,7 +20,7 @@ document.addEventListener('click', e => {
 
 let allTitles = [];
 async function loadList() {
-  allTitles = await (await fetch('/api/titles')).json();
+  allTitles = await (await apiFetch('/api/titles')).json();
   $('ccount').textContent = allTitles.length;
   renderList();
 }
@@ -50,7 +50,7 @@ function renderList() {
     el.querySelector('.e-cancel').onclick = () => { drawer.hidden = true; msg.textContent = ''; };
     el.querySelector('.rm').onclick = async () => {
       if (!confirm('Remove this title?')) return;
-      await fetch('/api/titles/' + id, { method: 'DELETE' });
+      await apiFetch('/api/titles/' + id, { method: 'DELETE' });
       loadList();
     };
     el.querySelector('.e-save').onclick = async () => {
@@ -74,7 +74,7 @@ document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
 
 // ---------- TMDB discovery + review queue ----------
 const api = async (url, opts) => {
-  const r = await fetch(url, opts);
+  const r = await apiFetch(url, opts);
   const data = await r.json();
   if (!r.ok) throw new Error(data.error || 'Request failed');
   return data;
@@ -158,18 +158,39 @@ async function loadQueue() {
         loadQueue(); loadList();
       } catch (e) { msg.className = 'msg q-msg err'; msg.textContent = e.message; }
     };
-    el.querySelector('.q-no').onclick = async () => { await fetch('/api/admin/candidates/' + id, { method: 'DELETE' }); loadQueue(); };
+    el.querySelector('.q-no').onclick = async () => { await apiFetch('/api/admin/candidates/' + id, { method: 'DELETE' }); loadQueue(); };
   });
 }
 
+// Refresh popularity: walks the catalogue a slice at a time (the server hands back `next`), so no request runs long.
+$('refresh-pop').onclick = async () => {
+  const btn = $('refresh-pop'), msg = $('refresh-msg');
+  btn.disabled = true; msg.className = 'msg';
+  let offset = 0, updated = 0, total = 0;
+  try {
+    while (offset !== null) {
+      msg.textContent = total ? `Refreshing popularity... ${Math.min(offset, total)} of ${total}` : 'Refreshing popularity...';
+      const d = await api('/api/admin/refresh-popularity?offset=' + offset + '&limit=25', { method: 'POST' });
+      total = d.total; updated += d.updated; offset = d.next;
+    }
+    msg.className = 'msg ok'; msg.textContent = `Done: ${updated} of ${total} titles changed.`;
+    loadList();
+  } catch (e) {
+    msg.className = 'msg err';
+    msg.textContent = (e.message || 'Failed') + (offset ? ` (stopped at ${offset} of ${total}; run it again to continue)` : '');
+  }
+  btn.disabled = false;
+};
+
 async function login() {
   const r = await post('/api/admin/login', { password: $('pw').value });
-  if (r.ok) { $('pw').value = ''; $('login-msg').textContent = ''; show(true); }
-  else $('login-msg').textContent = (await r.json()).error;
+  const data = await r.json();
+  if (r.ok) { setToken(data.token); $('pw').value = ''; $('login-msg').textContent = ''; show(true); }
+  else $('login-msg').textContent = data.error;
 }
 $('login-btn').onclick = login;
 $('pw').onkeydown = e => { if (e.key === 'Enter') login(); };
-$('logout').onclick = async e => { e.preventDefault(); await post('/api/admin/logout'); show(false); };
+$('logout').onclick = async e => { e.preventDefault(); await post('/api/admin/logout'); setToken(null); show(false); };
 
 $('add').onclick = async () => {
   const msg = $('add-msg');
@@ -187,4 +208,4 @@ $('add').onclick = async () => {
   } else { msg.className = 'msg err'; msg.textContent = data.error; }
 };
 
-fetch('/api/admin/me').then(r => r.json()).then(d => show(d.admin));
+apiFetch('/api/admin/me').then(r => r.json()).then(d => show(d.admin));

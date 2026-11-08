@@ -18,7 +18,7 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ESC[c]);
 // TMDB serves any size from the same path, so request sharper images than were stored.
 const tmdbSize = (u, size) => u ? String(u).replace(/\/t\/p\/w\d+\//, `/t/p/${size}/`) : u;
 const posterOf = (t, size = 'w500') => tmdbSize(t.poster || t.thumbnail, size);
-const pageOf = t => `/movie/${encodeURIComponent(t.id)}`;
+const pageOf = t => `/movie.html?id=${encodeURIComponent(t.id)}`;
 // Anime sit under every genre they have (minus "Animation", which says nothing); everything else under its one category.
 const catsOf = t => {
   if (!t.isAnime) return t.category ? [t.category] : [];
@@ -212,4 +212,4 @@ document.querySelectorAll('[data-tab]').forEach(a => a.onclick = e => {
   scrollTo(0, 0);
 });
 
-fetch('/api/titles').then(r => r.json()).then(d => { titles = d; render(); });
+apiFetch('/api/titles').then(r => r.json()).then(d => { titles = d; render(); });

@@ -36,7 +36,7 @@
   // ---------- matching ----------
   const norm = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
   let index = null, cats = [], loading = null;
-  const load = () => loading ||= fetch('/api/titles').then(r => r.json()).then(list => {
+  const load = () => loading ||= apiFetch('/api/titles').then(r => r.json()).then(list => {
     index = list.map((t, i) => ({ t, i, title: norm(t.title), other: [norm(t.category), norm(t.channel), norm(t.year), t.type === 'series' ? 'series' : 'movie'] }));
     const n = {};
     list.forEach(t => { if (t.category && !t.isAnime) n[t.category] = (n[t.category] || 0) + 1; });
@@ -75,7 +75,7 @@
 
   // ---------- dropdown / overlay ----------
   const meta = t => [t.type === 'series' ? 'Series' : '', t.year, t.category].filter(Boolean).map(h).join(' · ');
-  const href = t => `/movie/${encodeURIComponent(t.id)}`;
+  const href = t => `/movie.html?id=${encodeURIComponent(t.id)}`;
   let active = -1, overlayOpen = false;
 
   function row(t) {

@@ -2,9 +2,10 @@ const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ESC[c]);
 const tmdbSize = (u, size) => u ? String(u).replace(/\/t\/p\/w\d+\//, `/t/p/${size}/`) : u;
 const page = document.getElementById('page');
-const id = decodeURIComponent(location.pathname.split('/')[2] || '');
+// /movie.html?id=<id> works on any static host; the old /movie/<id> form is still understood.
+const id = new URLSearchParams(location.search).get('id') || decodeURIComponent(location.pathname.split('/')[2] || '');
 
-fetch(`/api/titles/${encodeURIComponent(id || '')}/details`)
+apiFetch(`/api/titles/${encodeURIComponent(id || '')}/details`)
   .then(r => r.ok ? r.json() : Promise.reject())
   .then(draw)
   .catch(() => { page.innerHTML = '<div class="empty" style="padding-top:140px">Title not found. <a href="/" style="color:var(--red)">Back to home</a></div>'; });
@@ -51,7 +52,7 @@ function franchise(title) {
 }
 
 // "More like this": franchise entries (sequels/prequels) first, then the rest of the same category.
-function loadSimilar(t) { fetch('/api/titles').then(r => r.json()).then(all => {
+function loadSimilar(t) { apiFetch('/api/titles').then(r => r.json()).then(all => {
   const me = franchise(t.title);
   const pool = all.filter(x => x.id !== t.id && !!x.isAnime === !!t.isAnime); // anime stays with anime, movies with movies
   const series = pool.map(x => ({ x, f: franchise(x.title) })).filter(({ f }) => me.key.length >= 3 && f.key === me.key)
@@ -65,7 +66,7 @@ function loadSimilar(t) { fetch('/api/titles').then(r => r.json()).then(all => {
   const others = [...series, ...rest];
   if (!others.length) return;
   document.getElementById('sim').innerHTML = others.slice(0, 12).map(s =>
-    `<a class="sim" href="/movie/${encodeURIComponent(s.id)}"><img src="${esc(tmdbSize(s.poster || s.thumbnail, 'w342'))}" alt="" loading="lazy"><b>${esc(s.title)}</b><span>${[s.year, s.category].filter(Boolean).map(esc).join(' · ')}</span></a>`).join('');
+    `<a class="sim" href="/movie.html?id=${encodeURIComponent(s.id)}"><img src="${esc(tmdbSize(s.poster || s.thumbnail, 'w342'))}" alt="" loading="lazy"><b>${esc(s.title)}</b><span>${[s.year, s.category].filter(Boolean).map(esc).join(' · ')}</span></a>`).join('');
   if (t.isAnime) document.querySelector('#sim-sec h2').textContent = 'More Anime Like This';
   document.getElementById('sim-sec').hidden = false;
 }); }
