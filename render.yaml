@@ -1,23 +1,12 @@
-# Frontend only: a Render Static Site. The API runs elsewhere (Wasmer) - set API_BASE to its URL.
+# Frontend only. A small Node web service (server.js) serves frontend/ and points it at the API, which runs elsewhere
+# (Wasmer). Set API_BASE to the API's URL. The API must list this site's address in its CORS_ORIGINS.
 services:
   - type: web
-    name: youflix-frontend
-    runtime: static
-    rootDir: frontend
-    # Writes the API URL into config.js at build time (committed default is "" = same origin).
-    buildCommand: echo "window.YOUFLIX_API_BASE = '${API_BASE}';" > config.js
-    staticPublishPath: .
+    name: youflix
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
     envVars:
       - key: API_BASE
-        sync: false          # e.g. https://youflix-api.wasmer.app
-    routes:
-      - type: rewrite
-        source: /movie/*
-        destination: /movie.html
-      - type: rewrite
-        source: /admin
-        destination: /admin.html
-    headers:
-      - path: /*
-        name: X-Content-Type-Options
-        value: nosniff
+        sync: false          # e.g. https://youflix-api.wasmer.app (no trailing slash)

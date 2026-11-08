@@ -5,7 +5,8 @@ A Netflix-style front end for movies and series that are **already free on YouTu
 ## Layout
 
 ```
-frontend/   static site (HTML, CSS, JavaScript); hosted separately, or served by the backend in local dev
+frontend/   static site (HTML, CSS, JavaScript); hosted by server.js on Render, or by the backend in local dev
+server.js   tiny Node host for frontend/ (Render); package.json only declares `npm start`
 backend/    FastAPI + MongoDB
   app/        the API, routes, TMDB and YouTube clients, schema, popularity and category jobs
   scripts/    one-off tools, e.g. the JSON -> MongoDB migration
@@ -88,7 +89,7 @@ python -m unittest discover tests
 | `SERVE_FRONTEND` | `false` on the API-only deployment (default `true` serves `frontend/` too, for local dev) |
 | `CORS_ORIGINS` | comma-separated frontend origins allowed to call the API, e.g. `https://youflix.onrender.com` |
 
-**Frontend** (Render Static Site, see `render.yaml`): set `API_BASE` to the API's URL (no trailing slash). The build step writes it into `frontend/config.js`; `/movie/*` and `/admin` are rewritten to their HTML files.
+**Frontend** (Render web service, see `render.yaml`): a Node service. Build `npm install`, start `npm start`, health check `/healthz`. `server.js` has no dependencies: it serves `frontend/`, builds `/config.js` from the `API_BASE` environment variable (the API's URL, no trailing slash) at request time, and keeps `/movie/<id>` and `/admin` working. Add the site's address to the API's `CORS_ORIGINS`, or the browser will block every API call.
 
 Admin auth is a bearer token: `POST /api/admin/login` returns `{token}`, which the admin page stores and sends as `Authorization: Bearer ...`. The cookie is still set for same-origin use. Sessions and caches are stored in MongoDB, so more than one worker is fine.
 
