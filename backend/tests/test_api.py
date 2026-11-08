@@ -44,7 +44,8 @@ class ApiTest(unittest.TestCase):
     TMDB = False     # subclasses switch TMDB on
 
     def setUp(self):
-        env = {"ADMIN_PASSWORD": "pw", "TMDB_API_KEY": "key" if self.TMDB else "", "TMDB_TOKEN": "", "MONGODB_URI": ""}
+        env = {"ADMIN_PASSWORD": "pw", "TMDB_API_KEY": "key" if self.TMDB else "", "TMDB_TOKEN": "", "MONGODB_URI": "",
+               "SERVE_FRONTEND": "true", "CORS_ORIGINS": ""}      # pinned, so a developer's .env cannot change what the tests see
         patcher = mock.patch.dict(os.environ, env)
         patcher.start()
         self.addCleanup(patcher.stop)
@@ -78,9 +79,10 @@ class StaticAndErrors(ApiTest):
         self.assertEqual(self.client.get("/style.css").status_code, 200)
 
     def test_html_urls_redirect(self):
-        for page in ("admin", "movie"):
-            r = self.client.get(f"/{page}.html", follow_redirects=False)
-            self.assertEqual((r.status_code, r.headers["location"]), (301, f"/{page}"))
+        r = self.client.get("/admin.html", follow_redirects=False)
+        self.assertEqual((r.status_code, r.headers["location"]), (301, "/admin"))
+        # movie.html is served as is: redirecting would drop the ?id=... the page needs
+        self.assertEqual(self.client.get("/movie.html?id=x", follow_redirects=False).status_code, 200)
 
     def test_errors_use_the_error_key(self):
         r = self.client.get("/no-such-page")
@@ -467,3 +469,9 @@ class SplitDeployment(ApiTest):
         for path in ("/", "/admin", "/movie/x", "/style.css"):
             self.assertEqual(c.get(path).status_code, 404, path)
         self.assertEqual(c.get("/api/titles").status_code, 200)
+
+    def test_missing_frontend_folder_does_not_crash(self):
+        with mock.patch.object(config, "FRONTEND_DIR", Path("/no/such/dir")), mock.patch("app.main.FRONTEND_DIR", Path("/no/such/dir")):
+            c = self.make()
+        self.assertEqual(c.get("/api/titles").status_code, 200)
+        self.assertEqual(c.get("/").status_code, 404)

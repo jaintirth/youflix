@@ -75,7 +75,7 @@
 
   // ---------- dropdown / overlay ----------
   const meta = t => [t.type === 'series' ? 'Series' : '', t.year, t.category].filter(Boolean).map(h).join(' · ');
-  const href = t => `/movie/${encodeURIComponent(t.id)}`;
+  const href = t => `/movie.html?id=${encodeURIComponent(t.id)}`;
   let active = -1, overlayOpen = false;
 
   function row(t) {

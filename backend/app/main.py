@@ -43,12 +43,12 @@ def create_app() -> FastAPI:
     app.include_router(admin.router)
     app.include_router(titles.router)
 
-    if settings.serve_frontend:
+    # An API-only deployment (e.g. only backend/ uploaded) has no frontend folder; never crash on that.
+    if settings.serve_frontend and FRONTEND_DIR.is_dir():
         # Clean URLs: /movie/<id> and /admin instead of the .html files.
-        @app.get("/movie.html", include_in_schema=False)
         @app.get("/admin.html", include_in_schema=False)
         def drop_html(request: Request):
-            return RedirectResponse(request.url.path.removesuffix(".html"), status_code=301)
+            return RedirectResponse("/admin", status_code=301)
 
         @app.get("/movie/{title_id}", include_in_schema=False)
         def movie_page(title_id: str):
