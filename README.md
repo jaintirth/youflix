@@ -7,7 +7,7 @@ A Netflix-style front end for movies and series that are **already free on YouTu
 ```
 frontend/   static site (HTML, CSS, JavaScript); hosted separately, or served by the backend in local dev
 backend/    FastAPI + MongoDB
-  app/        the API, routes, TMDB and YouTube clients, schema, background jobs
+  app/        the API, routes, TMDB and YouTube clients, schema, popularity and category jobs
   scripts/    one-off tools, e.g. the JSON -> MongoDB migration
   tests/      backend tests (in-memory MongoDB, TMDB and YouTube faked)
 data/       the old JSON storage; only the migration reads it
@@ -20,7 +20,7 @@ docs/       design notes (MongoDB schema)
 - Admin page (`/admin`), password protected: paste a YouTube video URL (movie) or playlist URL (series); title and thumbnail come from YouTube
 - TMDB discovery: search TMDB and shortlist titles into a review queue. Nothing is public until you check YouTube yourself, paste the free link and click Approve & publish (needs a free TMDB key)
 - Edit watch and trailer links, remove titles
-- Ranked by TMDB's daily popularity score
+- Ranked by TMDB's popularity score, refreshed on demand from the admin page
 
 ## Run it
 
@@ -58,16 +58,18 @@ uvicorn app.main:app --reload
 
 Open http://localhost:8000, and http://localhost:8000/admin for the admin screen. Interactive API docs are at `/api/docs`.
 
-## Background jobs
+## Popularity scores
 
-Run from the `backend` folder:
+A title gets its TMDB popularity score when it is added. TMDB recalculates the scores daily, so the order drifts over time:
+click **Refresh popularity** in the admin page (Catalogue tab) to re-read every score. It works through the catalogue a
+slice at a time, so it is safe on hosts with short request limits. There is no scheduler to set up.
+
+The same refresh, and the category backfill, are also available as commands, run from the `backend` folder:
 
 ```bash
-python -m app.jobs.refresh_popularity     # daily: refresh TMDB popularity scores
+python -m app.jobs.refresh_popularity     # refresh all TMDB popularity scores
 python -m app.jobs.backfill_categories    # occasionally: fill in missing categories and genres from TMDB
 ```
-
-Schedule the first one once a day (cron, Render Cron Job, Task Scheduler). It is not a timer inside the web server, so it runs once no matter how many workers you run.
 
 ## Tests
 

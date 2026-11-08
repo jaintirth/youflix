@@ -6,6 +6,7 @@
 import json
 import os
 import sys
+import time
 import unittest
 import uuid
 from datetime import datetime, timedelta, timezone
@@ -241,6 +242,7 @@ class Candidates(ApiTest):
     def test_list_is_newest_first(self):
         self.login()
         a = self.shortlist(tmdbId=1, title="A").json()["id"]
+        time.sleep(0.05)          # two shortlists in the same clock tick (about 15 ms on Windows) have no newest
         b = self.shortlist(tmdbId=2, title="B").json()["id"]
         self.assertEqual([x["id"] for x in self.client.get("/api/admin/candidates").json()], [b, a])
 
@@ -432,6 +434,39 @@ class Jobs(ApiTest):
         self.assertEqual((two["details"]["popularity"], two["externalIds"]), (5.5, [{"system": "tmdb:tv", "id": 77}]))
         self.assertIsNone(three["details"].get("popularity"))                      # audiobooks are not scored
         self.assertTrue(all("/movie" not in c for c in calls if "/tv" in c))
+
+    def test_refresh_in_slices(self):
+        from app.jobs import refresh_popularity
+        self.seed(*(item(i, pop=1.0, tmdb_id=100 + i) for i in range(1, 6)))
+        with mock.patch.object(tmdb, "request", return_value={"popularity": 7.0}):
+            r = refresh_popularity.refresh(self.db, offset=0, limit=2)
+            self.assertEqual(r, {"total": 5, "checked": 2, "updated": 2})
+            r = refresh_popularity.refresh(self.db, offset=4, limit=2)
+            self.assertEqual(r, {"total": 5, "checked": 1, "updated": 1})
+        scores = {d["_id"]: d["details"]["popularity"] for d in self.db.items.find()}
+        self.assertEqual(scores, {"id-1": 7.0, "id-2": 7.0, "id-3": 1.0, "id-4": 1.0, "id-5": 7.0})
+
+
+class RefreshButton(ApiTest):
+    TMDB = True
+
+    def test_requires_admin(self):
+        self.assertEqual(self.client.post("/api/admin/refresh-popularity").status_code, 401)
+
+    def test_walks_the_catalogue_by_following_next(self):
+        self.seed(*(item(i, pop=1.0, tmdb_id=100 + i) for i in range(1, 6)))
+        self.login()
+        with mock.patch.object(tmdb, "request", return_value={"popularity": 3.0}):
+            r = self.client.post("/api/admin/refresh-popularity", params={"offset": 0, "limit": 2}).json()
+            self.assertEqual((r["total"], r["checked"], r["updated"], r["next"]), (5, 2, 2, 2))
+            r = self.client.post("/api/admin/refresh-popularity", params={"offset": 4, "limit": 2}).json()
+            self.assertEqual((r["checked"], r["next"]), (1, None))
+
+    def test_needs_tmdb(self):
+        self.login()
+        with mock.patch.object(tmdb, "configured", return_value=False):
+            r = self.client.post("/api/admin/refresh-popularity")
+        self.assertEqual((r.status_code, "TMDB is not configured" in r.json()["error"]), (503, True))
 
 
 if __name__ == "__main__":

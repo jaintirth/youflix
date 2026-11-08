@@ -11,6 +11,7 @@ from pymongo.errors import DuplicateKeyError
 from .. import auth, tmdb, youtube
 from ..config import get_settings
 from ..db import get_db
+from ..jobs.refresh_popularity import refresh as refresh_popularity
 from ..publish import external_id_filter, loose_int, publish, text
 from ..schemas import ApproveBody, CandidateBody, LoginBody
 from ..schema import tmdb_system
@@ -48,6 +49,18 @@ def me(request: Request, db=Depends(get_db)):
 @protected.get("/api/admin/config")
 def config():
     return {"tmdb": tmdb.configured()}
+
+
+@protected.post("/api/admin/refresh-popularity")
+def refresh_popularity_slice(offset: int = 0, limit: int = 25, db=Depends(get_db)):
+    """Refresh a slice of the catalogue's TMDB popularity scores. The admin button calls this repeatedly, following
+    `next`, so each request stays short (a title needs one or two TMDB calls)."""
+    if not tmdb.configured():
+        raise HTTPException(503, "TMDB is not configured. Set TMDB_API_KEY (or TMDB_TOKEN) and restart.")
+    limit = min(max(limit, 1), 50)
+    offset = max(offset, 0)
+    r = refresh_popularity(db, offset, limit)
+    return {**r, "next": offset + limit if offset + limit < r["total"] else None}
 
 
 @protected.get("/api/admin/tmdb/search")

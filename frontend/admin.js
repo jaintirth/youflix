@@ -162,6 +162,26 @@ async function loadQueue() {
   });
 }
 
+// Refresh popularity: walks the catalogue a slice at a time (the server hands back `next`), so no request runs long.
+$('refresh-pop').onclick = async () => {
+  const btn = $('refresh-pop'), msg = $('refresh-msg');
+  btn.disabled = true; msg.className = 'msg';
+  let offset = 0, updated = 0, total = 0;
+  try {
+    while (offset !== null) {
+      msg.textContent = total ? `Refreshing popularity... ${Math.min(offset, total)} of ${total}` : 'Refreshing popularity...';
+      const d = await api('/api/admin/refresh-popularity?offset=' + offset + '&limit=25', { method: 'POST' });
+      total = d.total; updated += d.updated; offset = d.next;
+    }
+    msg.className = 'msg ok'; msg.textContent = `Done: ${updated} of ${total} titles changed.`;
+    loadList();
+  } catch (e) {
+    msg.className = 'msg err';
+    msg.textContent = (e.message || 'Failed') + (offset ? ` (stopped at ${offset} of ${total}; run it again to continue)` : '');
+  }
+  btn.disabled = false;
+};
+
 async function login() {
   const r = await post('/api/admin/login', { password: $('pw').value });
   const data = await r.json();
